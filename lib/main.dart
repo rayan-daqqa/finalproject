@@ -1,3 +1,5 @@
+import 'package:final_project/Views/HomePageScreen.dart';
+import 'package:final_project/Views/RegistertScreen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -52,17 +54,50 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Text("Email:", style: TextStyle(fontSize:20)),
             TextField(
+              decoration:InputDecoration(
+                border:OutlineInputBorder(),
+                hintText: 'enter your email',
+              ), ),
+            Text("Password:", style: TextStyle(fontSize:20)),
+
+            TextField(
                 decoration:InputDecoration(
               border:OutlineInputBorder(),
-                  hintText: 'enter your email',
+                  hintText: 'enter your password',
             ), ),
             TextButton(
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
               ),
-              onPressed: () { },
-              child: Text('Next'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomePageScreen(title: 'homepage')),
+                );
+
+              },
+              child: Text('Login'),
+            ),
+
+
+            TextButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              ),
+              onPressed: () {
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const RegistertScreen(title: 'register')),
+                );
+
+              },
+              child: Text('Create new account'),
             )
+
+
+
+
           ],
         ),
       ),
