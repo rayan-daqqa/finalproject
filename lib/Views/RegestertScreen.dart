@@ -52,10 +52,10 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Text("Email:", style: TextStyle(fontSize:20)),
             TextField(
-                decoration:InputDecoration(
-              border:OutlineInputBorder(),
-                  hintText: 'enter your email',
-            ), ),
+              decoration:InputDecoration(
+                border:OutlineInputBorder(),
+                hintText: 'enter your email',
+              ), ),
             TextButton(
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
