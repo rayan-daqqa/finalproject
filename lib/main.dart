@@ -52,19 +52,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("Email:", style: TextStyle(fontSize:20)),
-            TextField(
+            Text("Email:", style: TextStyle(fontSize:20),),
+        Container(
+          width: 500,
+          child:TextField(
               decoration:InputDecoration(
                 border:OutlineInputBorder(),
                 hintText: 'enter your email',
-              ), ),
-            Text("Password:", style: TextStyle(fontSize:20)),
+              ), ),),
 
-            TextField(
+
+            Text("password:", style: TextStyle(fontSize:20),),
+            Container(
+              width: 500,
+              child:TextField(
                 decoration:InputDecoration(
-              border:OutlineInputBorder(),
-                  hintText: 'enter your password',
-            ), ),
+                  border:OutlineInputBorder(),
+                  hintText: 'enter your password ',
+                ), ),),
+
             TextButton(
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),

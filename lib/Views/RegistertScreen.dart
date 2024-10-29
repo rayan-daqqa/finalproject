@@ -1,6 +1,8 @@
 import 'package:final_project/Views/HomePageScreen.dart';
 import 'package:flutter/material.dart';
 
+import '../Utils/Utils.dart';
+
 
 
 class RegistertScreen extends StatefulWidget {
@@ -42,31 +44,41 @@ class RegistertPageState extends State<RegistertScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
 
-            Text("FirstName:", style: TextStyle(fontSize:20)),
-            TextField(
+            Text("FirstName:", style: TextStyle(fontSize:20),),
+            Container(
+            width: 500,
+            child: TextField(
               decoration:InputDecoration(
                 border:OutlineInputBorder(),
                 hintText: 'enter your FirstName',
-              ), ),
+              ),
+             ),
+            ),
 
-
-            Text("lastName:", style: TextStyle(fontSize:20)),
-            TextField(
+              Text("LastName:", style: TextStyle(fontSize:20),),
+              Container(width: 500,
+              child: TextField(
               decoration:InputDecoration(
-                border:OutlineInputBorder(),
-                hintText: 'enter your lastName',
-              ), ),
+              border:OutlineInputBorder(),
+              hintText: 'enter your LastName',
+              ),
+              ),
+              ),
 
 
 
 
-            Text("Email:", style: TextStyle(fontSize:20)),
-            TextField(
-              decoration:InputDecoration(
-                border:OutlineInputBorder(),
-                hintText: 'enter your email',
-              ), ),
 
+
+            Text("email:", style: TextStyle(fontSize:20),),
+            Container(width: 500,
+              child: TextField(
+                decoration:InputDecoration(
+                  border:OutlineInputBorder(),
+                  hintText: 'email',
+                ),
+              ),
+            ),
 
 
 
@@ -75,15 +87,30 @@ class RegistertPageState extends State<RegistertScreen> {
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
               ),
-              onPressed: () {
+              onPressed: (
+                  ) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const HomePageScreen(title: 'Register')),
+                  MaterialPageRoute(builder: (context) => const HomePageScreen(title: 'login')),
                 );
               },
-              child: Text('Register'),
+              child: Text('login'),),
 
-            )
+            TextButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              ),
+              onPressed: () {
+                var uti = new Utils();
+                uti.showMyDialog(context, _txtFirstName.text, _txtFirstName.text);
+
+              },
+              child: Text('login'),
+            ),
+
+
+
+
           ],
         ),
       ),
