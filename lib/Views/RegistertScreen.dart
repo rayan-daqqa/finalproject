@@ -2,6 +2,7 @@ import 'package:final_project/Views/HomePageScreen.dart';
 import 'package:flutter/material.dart';
 
 import '../Utils/Utils.dart';
+import '../Utils/db.dart';
 
 
 
@@ -87,25 +88,28 @@ class RegistertPageState extends State<RegistertScreen> {
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
               ),
-              onPressed: (
-                  ) {
+              onPressed: ()
+              {
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const HomePageScreen(title: 'login')),
                 );
               },
-              child: Text('login'),),
+              child: Text('HomePage'),),
 
             TextButton(
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
               ),
               onPressed: () {
-                var uti = new Utils();
-                uti.showMyDialog(context, _txtFirstName.text, _txtFirstName.text);
+                // var uti = new Utils();
+                // uti.showMyDialog(context, _txtFirstName.text, _txtFirstName.text);
+
+                insertUser("aa","bb");
 
               },
-              child: Text('login'),
+              child: Text('Register'),
             ),
 
 
