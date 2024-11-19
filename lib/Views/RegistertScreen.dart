@@ -105,12 +105,7 @@ class RegistertPageState extends State<RegistertScreen> {
               onPressed: () {
                 // var uti = new Utils();
                 // uti.showMyDialog(context, _txtFirstName.text, _txtFirstName.text);
-                User us=new User();
-                us.Password="303038";
-                us.firstname="name";
-                us.lastname="daqqa";
-                us.userID="1";
-                insertUser(us);
+
 
               },
               child: Text('Register'),
