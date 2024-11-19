@@ -1,6 +1,7 @@
 import 'package:final_project/Views/HomePageScreen.dart';
 import 'package:flutter/material.dart';
 
+import '../Models/User.dart';
 import '../Utils/Utils.dart';
 import '../Utils/db.dart';
 
@@ -105,7 +106,12 @@ class RegistertPageState extends State<RegistertScreen> {
               onPressed: () {
                 // var uti = new Utils();
                 // uti.showMyDialog(context, _txtFirstName.text, _txtFirstName.text);
-
+                User us=new User();
+                us.Password="303038";
+                us.firstName="name";
+                us.lastName="daqqa";
+                us.userID="1";
+                insertUser(us);
 
               },
               child: Text('Register'),
