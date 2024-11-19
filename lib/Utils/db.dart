@@ -30,7 +30,7 @@ Future<void> showUsers() async {
 
 
 
-Future<void> insertUser(firstname,lastname) async {
+Future<void> insertUser(user) async {
   var settings = new ConnectionSettings(
       host: 'localhost',
       port: 3306,
