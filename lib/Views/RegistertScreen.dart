@@ -21,6 +21,9 @@ class RegistertScreen extends StatefulWidget {
 class RegistertPageState extends State<RegistertScreen> {
 
   final _txtFirstName = TextEditingController();
+  final _txtlasttName = TextEditingController();
+  final _txtPassword = TextEditingController();
+  final _txtuserID = TextEditingController();
 
 
 
@@ -31,7 +34,26 @@ class RegistertPageState extends State<RegistertScreen> {
       _counter++;
     });
   }
-
+void InsertUserFunc(){
+    if(_txtFirstName.text!=""){
+      User us=new User();
+      us.firstName =_txtFirstName.text ;
+      us.lastName =_txtlasttName.text ;
+      us.Password =_txtPassword.text ;
+      us.userID =_txtuserID.text ;
+      insertUser(us);
+      var uti=new Utils();
+      uti.showMyDialog(context, "success", "you registed successfully");
+      _txtFirstName.text="";
+      _txtlasttName.text="";
+      _txtPassword.text="";
+      _txtuserID.text="";
+    }
+    else{
+      var uti=new Utils();
+      uti.showMyDialog(context, "Required", "Please insert first name");
+    }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +68,7 @@ class RegistertPageState extends State<RegistertScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
 
-            Text("FirstName:", style: TextStyle(fontSize:20),),
+            Text("FirstName*:", style: TextStyle(fontSize:20),),
             Container(
             width: 500,
             child: TextField(
@@ -72,7 +94,7 @@ class RegistertPageState extends State<RegistertScreen> {
 
 
 
-            Text("email:", style: TextStyle(fontSize:20),),
+            Text("email*:", style: TextStyle(fontSize:20),),
             Container(width: 500,
               child: TextField(
                 decoration:InputDecoration(
@@ -106,15 +128,11 @@ class RegistertPageState extends State<RegistertScreen> {
               onPressed: () {
                 // var uti = new Utils();
                 // uti.showMyDialog(context, _txtFirstName.text, _txtFirstName.text);
-                User us=new User();
-                us.Password="303038";
-                us.firstName="name";
-                us.lastName="daqqa";
-                us.userID="1";
-                insertUser(us);
+
+                InsertUserFunc();
 
               },
-              child: Text('Register'),
+              child: Text('creat'),
             ),
 
 

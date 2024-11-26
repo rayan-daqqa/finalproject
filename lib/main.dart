@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'RAYAN'),
+      home: const MyHomePage(title: 'LIFE SKILLS'),
     );
   }
 }
@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const RegistertScreen(title: 'register')),
+                  MaterialPageRoute(builder: (context) => const RegistertScreen(title: 'Creat account')),
                 );
 
               },
