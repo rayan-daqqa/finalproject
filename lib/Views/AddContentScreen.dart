@@ -5,30 +5,25 @@ import '../Models/User.dart';
 import '../Utils/Utils.dart';
 import '../Utils/db.dart';
 
-class RegistertScreen extends StatefulWidget {
-  const RegistertScreen({super.key, required this.title});
+class Addcontentscreen extends StatefulWidget {
+  const Addcontentscreen({super.key, required this.title});
 
   final String title;
 
   @override
-  State<RegistertScreen> createState() => RegistertPageState();
+  State<Addcontentscreen> createState() => AddContentPageState();
 }
 
-class RegistertPageState extends State<RegistertScreen> {
-  final _txtFirstName = TextEditingController();
-  final _txtlasttName = TextEditingController();
-  final _txtPassword = TextEditingController();
-  final _txtEmail = TextEditingController();
+class AddContentPageState extends State<Addcontentscreen> {
+  final _txttopic = TextEditingController();
+  final _txtcategory = TextEditingController();
 
-  void InsertUserFunc() {
-    if (_txtFirstName.text != "") {
-      User us = new User();
-      us.firstName = _txtFirstName.text;
-      us.lastName = _txtlasttName.text;
-      us.Password = _txtPassword.text;
-      us.email = _txtEmail.text;
 
-      insertUser(us);
+  void Insertchannelfunc() {
+    if (_txttopic.text != ""||_txtcategory.text != "") {
+      
+      
+      
       /*
       var uti=new Utils();
       uti.showMyDialog(context, "success", "you registed successfully");
@@ -43,6 +38,12 @@ class RegistertPageState extends State<RegistertScreen> {
   }
 
   @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+
+  /*@override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -139,5 +140,5 @@ class RegistertPageState extends State<RegistertScreen> {
         ),
       ),
     );
-  }
+  }*/
 }
