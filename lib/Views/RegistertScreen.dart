@@ -5,8 +5,6 @@ import '../Models/User.dart';
 import '../Utils/Utils.dart';
 import '../Utils/db.dart';
 
-
-
 class RegistertScreen extends StatefulWidget {
   const RegistertScreen({super.key, required this.title});
 
@@ -16,44 +14,34 @@ class RegistertScreen extends StatefulWidget {
   State<RegistertScreen> createState() => RegistertPageState();
 }
 
-
-
 class RegistertPageState extends State<RegistertScreen> {
-
   final _txtFirstName = TextEditingController();
   final _txtlasttName = TextEditingController();
   final _txtPassword = TextEditingController();
-  final _txtuserID = TextEditingController();
+  final _txtEmail = TextEditingController();
 
+  void InsertUserFunc() {
+    if (_txtFirstName.text != "") {
+      User us = new User();
+      us.firstName = _txtFirstName.text;
+      us.lastName = _txtlasttName.text;
+      us.Password = _txtPassword.text;
+      us.email = _txtEmail.text;
 
-
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-void InsertUserFunc(){
-    if(_txtFirstName.text!=""){
-      User us=new User();
-      us.firstName =_txtFirstName.text ;
-      us.lastName =_txtlasttName.text ;
-      us.Password =_txtPassword.text ;
-      us.userID =_txtuserID.text ;
       insertUser(us);
+      /*
       var uti=new Utils();
       uti.showMyDialog(context, "success", "you registed successfully");
       _txtFirstName.text="";
       _txtlasttName.text="";
       _txtPassword.text="";
-      _txtuserID.text="";
-    }
-    else{
-      var uti=new Utils();
+      */
+    } else {
+      var uti = new Utils();
       uti.showMyDialog(context, "Required", "Please insert first name");
     }
-}
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,65 +50,79 @@ void InsertUserFunc(){
         title: Text(widget.title),
       ),
       body: Center(
-
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-
-            Text("FirstName*:", style: TextStyle(fontSize:20),),
-            Container(
-            width: 500,
-            child: TextField(
-              decoration:InputDecoration(
-                border:OutlineInputBorder(),
-                hintText: 'enter your FirstName',
-              ),
-             ),
+            Text(
+              "FirstName*:",
+              style: TextStyle(fontSize: 20),
             ),
-
-              Text("LastName:", style: TextStyle(fontSize:20),),
-              Container(width: 500,
+            Container(
+              width: 500,
               child: TextField(
-              decoration:InputDecoration(
-              border:OutlineInputBorder(),
-              hintText: 'enter your LastName',
-              ),
-              ),
-              ),
-
-
-
-
-
-
-            Text("email*:", style: TextStyle(fontSize:20),),
-            Container(width: 500,
-              child: TextField(
-                decoration:InputDecoration(
-                  border:OutlineInputBorder(),
-                  hintText: 'email',
+                controller: _txtFirstName,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'enter your FirstName',
                 ),
               ),
             ),
-
-
-
-
+            Text(
+              "LastName:",
+              style: TextStyle(fontSize: 20),
+            ),
+            Container(
+              width: 500,
+              child: TextField(
+                controller: _txtlasttName,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'enter your LastName',
+                ),
+              ),
+            ),
+            Text(
+              "email*:",
+              style: TextStyle(fontSize: 20),
+            ),
+            Container(
+              width: 500,
+              child: TextField(
+                controller: _txtEmail,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'enter your email',
+                ),
+              ),
+            ),
+            Text(
+              "password*:",
+              style: TextStyle(fontSize: 20),
+            ),
+            Container(
+              width: 500,
+              child: TextField(
+                controller: _txtPassword,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'enter your password',
+                ),
+              ),
+            ),
             TextButton(
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
               ),
-              onPressed: ()
-              {
-
+              onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const HomePageScreen(title: 'login')),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          const HomePageScreen(title: 'login')),
                 );
               },
-              child: Text('HomePage'),),
-
+              child: Text('HomePage'),
+            ),
             TextButton(
               style: ButtonStyle(
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
@@ -130,19 +132,12 @@ void InsertUserFunc(){
                 // uti.showMyDialog(context, _txtFirstName.text, _txtFirstName.text);
 
                 InsertUserFunc();
-
               },
               child: Text('creat'),
             ),
-
-
-
-
           ],
         ),
       ),
-
-
     );
   }
 }

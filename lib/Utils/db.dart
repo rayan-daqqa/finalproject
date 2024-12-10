@@ -1,23 +1,26 @@
 import 'package:mysql1/mysql1.dart';
 
+import '../Models/User.dart';
+
 var _conn;
-/*
-void main(){
-  showUsers();
-  insertUser("aa","bb");
-}
-*/
 
-// for(int i=0; i<100; 1++)
-
-Future<void> showUsers() async {
+Future<void> connect() async {
   var settings = new ConnectionSettings(
-      host: 'localhost',
+      host: '10.0.2.2',
       port: 3306,
       user: 'root',
       db: 'rayan12'
   );
   _conn = await MySqlConnection.connect(settings);
+}
+
+
+
+
+Future<void> showUsers() async {
+
+  connect();
+
   // Query the database using a parameterized query
   var results = await _conn.query(
     'select * from users',);
@@ -30,28 +33,18 @@ Future<void> showUsers() async {
 
 
 
-Future<void> insertUser(user) async {
-  var settings = new ConnectionSettings(
-      host: 'localhost',
-      port: 3306,
-      user: 'root',
-      db: 'rayan12'
-  );
-  var conn = await MySqlConnection.connect(settings);
+Future<void> insertUser(User user) async {
 
-  var result = await conn.query(
-      'insert into users (firstName, lastName) values (?, ?)',
-      ['Bob', 'momo']);
-  print('Inserted row id=${result.insertId}');
-  var result2 = await conn.query(
-      'insert into users (firstName, lastName) values (?, ?)',
-      ['test2', 'momo2']);
-  print('Inserted row id=${result.insertId}');
+  connect();
 
+  var result = await _conn.query(
+      'insert into users (firstName, lastName,password,email) values (?,?,?,?)',
+      [user.firstName,user.lastName,user.Password,user.email ]);
+  print('Inserted row id=${result.insertId}');
 
   //////////
 
-
+/*
   // Query the database using a parameterized query
   var results = await conn.query(
       'select * from users where userID = ?', [6]);  // [result.insertId]
@@ -68,6 +61,9 @@ Future<void> insertUser(user) async {
   for (var row in results2) {
     print('Name: ${row[0]}, email: ${row[1]} age: ${row[2]}');
   }
+*/
 
   // Finally, close the connection
-  await conn.close();}
+  await _conn.close();
+
+}
