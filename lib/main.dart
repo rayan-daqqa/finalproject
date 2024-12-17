@@ -4,10 +4,31 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());
+
 }
+
+class first{
+  first({
+    this.Password="",
+    this.email="",
+
+});
+  String Password;
+  String email;
+  factory first. fromJson(Map<String, dynamic>json )=> first(
+  Password:json["Password"],
+  email:json["email"],
+  );
+  Map< String, dynamic>tojson()=>{
+    "Password":Password,
+    "email":email,};
+
+  }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
+  State<HomePageScreen> createState() => HomePageState();
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
@@ -18,6 +39,17 @@ class MyApp extends StatelessWidget {
       ),
       home: const MyHomePage(title: 'LIFE SKILLS'),
     );
+  }
+}
+
+class HomePageState extends  State<HomePageScreen> {
+  final _txtemail = TextEditingController();
+  final _txtpassword = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
   }
 }
 
