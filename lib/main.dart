@@ -1,4 +1,4 @@
-import 'package:final_project/Views/HomePageScreen.dart';
+import 'package:final_project/Views/HomepageScreen.dart';
 import 'package:final_project/Views/RegistertScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +13,7 @@ class first{
     this.email="",
 
 });
+
   String Password;
   String email;
   factory first. fromJson(Map<String, dynamic>json )=> first(
@@ -143,4 +144,5 @@ class _MyHomePageState extends State<MyHomePage> {
 
     );
   }
+
 }
