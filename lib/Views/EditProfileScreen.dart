@@ -1,9 +1,8 @@
 import 'package:final_project/Views/HomepageScreen.dart';
 import 'package:flutter/material.dart';
-
 import '../Models/User.dart';
 import '../Utils/Utils.dart';
-import '../Utils/db.dart';
+// import '../Utils/db.dart';
 
 class RegistertScreen extends StatefulWidget {
   const RegistertScreen({super.key, required this.title});
@@ -28,7 +27,7 @@ class RegistertPageState extends State<RegistertScreen> {
       us.Password = _txtPassword.text;
       us.email = _txtEmail.text;
 
-      insertUser(us);
+      // insertUser(us);
       /*
       var uti=new Utils();
       uti.showMyDialog(context, "success", "you registed successfully");
