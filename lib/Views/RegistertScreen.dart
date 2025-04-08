@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 import '../Models/User.dart';
 import '../Utils/CliendConfing.dart';
 import '../Utils/Utils.dart';
-import '../Utils/db.dart';
 import 'package:http/http.dart' as http;
-
-
 
 
 class RegistertScreen extends StatefulWidget {
@@ -18,6 +15,8 @@ class RegistertScreen extends StatefulWidget {
   @override
   State<RegistertScreen> createState() => RegistertPageState();
 }
+
+
 
 class RegistertPageState extends State<RegistertScreen> {
   final _txtFirstName = TextEditingController();
@@ -37,33 +36,25 @@ class RegistertPageState extends State<RegistertScreen> {
   }
 
   void InsertUserFunc() {
-    if (_txtFirstName.text != "") {
-      User us = new User();
-      us.firstName = _txtFirstName.text;
-      us.lastName = _txtlasttName.text;
-      us.Password = _txtPassword.text;
-      us.email = _txtEmail.text;
 
-      void InsertfirstFunc() {
-        if (_txtEmail.text != "") {
-          first f1 = new first();
-          f1.email = _txtEmail.text;
-          f1.Password = _txtPassword.text;
-
-
-          insertUser(context ,us);
-          /*
-      var uti=new Utils();
-      uti.showMyDialog(context, "success", "you registed successfully");
-      _txtFirstName.text="";
-      _txtlasttName.text="";
-      _txtPassword.text="";
-      */
-        } else {
-          var uti = new Utils();
-          uti.showMyDialog(context, "Required", "Please insert first name");
-        }
+      if (_txtEmail.text != ""||_txtPassword.text!=""||_txtFirstName.text != "" ) {
+        User us = new User();
+        us.firstName = _txtFirstName.text;
+        us.lastName = _txtlasttName.text;
+        us.Password = _txtPassword.text;
+        us.email = _txtEmail.text;
+        insertUser(context, us);
       }
+      else {
+        var uti = new Utils();
+        uti.showMyDialog(context, "Required", "Please insert your information");
+      }
+
+    }
+
+
+
+
 
       @override
       Widget build(BuildContext context) {
@@ -135,7 +126,7 @@ class RegistertPageState extends State<RegistertScreen> {
                     ),
                   ),
                 ),
-                TextButton(
+               /* TextButton(
                   style: ButtonStyle(
                     foregroundColor: MaterialStateProperty.all<Color>(
                         Colors.blue),
@@ -145,17 +136,31 @@ class RegistertPageState extends State<RegistertScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                          const HomePageScreen(title: 'login')),
+                          const RegistertScreen(title: 'regester')),
                     );
                   },
-                  child: Text('HomePage'),
-                ),
+                  child: Text('go back'),
+                ),*/
                 TextButton(
                   style: ButtonStyle(
                     foregroundColor: MaterialStateProperty.all<Color>(
                         Colors.blue),
                   ),
-                  onPressed: () {
+                  onPressed: () {if (_txtFirstName.text != "") {
+                    if (_txtEmail.text != "") {
+                      User us = new User();
+                      us.firstName = _txtFirstName.text;
+                      us.lastName = _txtlasttName.text;
+                      us.Password = _txtPassword.text;
+                      us.email = _txtEmail.text;
+                      insertUser(context, us);
+                    }
+                    else {
+                      var uti = new Utils();
+                      uti.showMyDialog(context, "Required", "Please insert first name");
+                    }
+
+                  }
                     // var uti = new Utils();
                     // uti.showMyDialog(context, _txtFirstName.text, _txtFirstName.text);
 
@@ -168,19 +173,6 @@ class RegistertPageState extends State<RegistertScreen> {
           ),
         );
       }
-    }
 
 
-    @override
-    Widget build(BuildContext context) {
-      // TODO: implement build
-      throw UnimplementedError();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
 }

@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:final_project/Views/HomepageScreen.dart';
 import 'package:final_project/Views/RegistertScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Models/checkLoginModel.dart';
+import 'Utils/CliendConfing.dart';
 import 'Utils/Utils.dart';
-
+import 'package:http/http.dart' as http;
 void main() {
   runApp(const MyApp());
 
@@ -42,7 +46,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'LIFE SKILLS'),
+      home: const MyHomePage(title: 'main'),
     );
   }
 }
@@ -69,7 +73,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-
+  final _txtPassword = TextEditingController();
+  final _txtEmail = TextEditingController();
   void _incrementCounter() {
     setState(() {
       _counter++;
@@ -88,6 +93,33 @@ class _MyHomePageState extends State<MyHomePage> {
       return;
     }
   }
+
+
+
+  Future checkLogin(BuildContext context) async {
+
+    //   SharedPreferences prefs = await SharedPreferences.getInstance();
+    //  String? getInfoDeviceSTR = prefs.getString("getInfoDeviceSTR");
+    var url = "login/checkLogin.php?Email=" +_txtEmail.text+ "&Password=" +_txtPassword.text;
+    final response = await http.get(Uri.parse(serverPath + url));
+    print(serverPath + url);
+    // setState(() { });
+    // Navigator.pop(context);
+    if(checkLoginModel.fromJson(jsonDecode(response.body)).result == "0")
+    {
+      return 'ת.ז ו/או הסיסמה שגויים';
+    }
+    else
+    {
+      // print("SharedPreferences 1");
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', checkLoginModel.fromJson(jsonDecode(response.body)).result!);
+      // return null;
+    }
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Container(
           width: 500,
           child:TextField(
+
               decoration:InputDecoration(
                 border:OutlineInputBorder(),
                 hintText: 'enter your email',
