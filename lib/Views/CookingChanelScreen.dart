@@ -41,7 +41,7 @@ class _LinksScreenState extends State<LinksScreen> {
       });
     } else {
       // في حالة وجود خطأ في الاتصال
-      throw Exception('فشل في تحميل الروابط');
+      throw Exception('Failed to load the link');
     }
   }
 
@@ -49,7 +49,7 @@ class _LinksScreenState extends State<LinksScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('عرض الروابط'),
+        title: Text('Display links'),
       ),
       body: links.isEmpty
           ? Center(child: CircularProgressIndicator())

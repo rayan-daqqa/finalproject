@@ -25,12 +25,12 @@ class _AddContentScreenState extends State<AddContentScreen> {
     if (title.isEmpty || channelType.isEmpty || link.isEmpty) {
       // إذا في حقل فارغ، يظهر رسالة تحذير
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('يرجى ملء جميع الحقول!')),
+        SnackBar(content: Text('Please fill all the information')),
       );
     } else {
       // هنا يمكن إرسال البيانات للسيرفر أو حفظها في قاعدة البيانات
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('تمت إضافة المحتوى بنجاح!')),
+        SnackBar(content: Text('The content was added successfully!')),
       );
 
       // تفريغ الحقول بعد الحفظ
@@ -44,7 +44,7 @@ class _AddContentScreenState extends State<AddContentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('إضافة محتوى جديد'),
+        title: Text('Add content'),
         backgroundColor: Colors.teal,
       ),
       body: Padding(
@@ -55,7 +55,7 @@ class _AddContentScreenState extends State<AddContentScreen> {
             TextField(
               controller: _titleController,
               decoration: InputDecoration(
-                labelText: 'العنوان',
+                labelText: 'Text',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -65,7 +65,7 @@ class _AddContentScreenState extends State<AddContentScreen> {
             TextField(
               controller: _channelTypeController,
               decoration: InputDecoration(
-                labelText: 'نوع القناة',
+                labelText: 'Category',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -85,7 +85,7 @@ class _AddContentScreenState extends State<AddContentScreen> {
             // زر الحفظ
             ElevatedButton(
               onPressed: _saveContent,
-              child: Text('حفظ المحتوى'),
+              child: Text('Save'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.teal,
                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),

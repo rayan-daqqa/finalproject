@@ -1,3 +1,4 @@
+import 'package:final_project/Views/AddContentScreen.dart';
 import 'package:final_project/Views/HomepageScreen.dart';
 import 'package:final_project/main.dart';
 import 'package:flutter/material.dart';
@@ -146,27 +147,27 @@ class RegistertPageState extends State<RegistertScreen> {
                     foregroundColor: MaterialStateProperty.all<Color>(
                         Colors.blue),
                   ),
-                  onPressed: () {if (_txtFirstName.text != "") {
-                    if (_txtEmail.text != "") {
-                      User us = new User();
-                      us.firstName = _txtFirstName.text;
-                      us.lastName = _txtlasttName.text;
-                      us.Password = _txtPassword.text;
-                      us.email = _txtEmail.text;
-                      insertUser(context, us);
-                    }
-                    else {
-                      var uti = new Utils();
-                      uti.showMyDialog(context, "Required", "Please insert first name");
-                    }
+                  onPressed: () {
+                    if (_txtFirstName.text != ""||_txtEmail.text != "" || _txtPassword.text != '' ||
+                        _txtEmail.text != '') {
 
-                  }
-                    // var uti = new Utils();
-                    // uti.showMyDialog(context, _txtFirstName.text, _txtFirstName.text);
-
-                    InsertUserFunc();
-                  },
-                  child: Text('creat'),
+                        User us = new User();
+                        us.firstName = _txtFirstName.text;
+                        us.lastName = _txtlasttName.text;
+                        us.Password = _txtPassword.text;
+                        us.email = _txtEmail.text;
+                        insertUser(context, us);
+                      }
+                      else {
+                        var uti = new Utils();
+                        uti.showMyDialog(
+                            context, "Required", "Please insert first name");
+                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const HomePageScreen(title: 'homepage')),
+                      );
+                    }, child: Text('creat'),
                 ),
               ],
             ),

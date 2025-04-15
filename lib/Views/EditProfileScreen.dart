@@ -4,16 +4,16 @@ import '../Models/User.dart';
 import '../Utils/Utils.dart';
 // import '../Utils/db.dart';
 
-class RegistertScreen extends StatefulWidget {
-  const RegistertScreen({super.key, required this.title});
+class EditProfileScreen extends StatefulWidget {
+  const EditProfileScreen({super.key, required this.title});
 
   final String title;
 
   @override
-  State<RegistertScreen> createState() => RegistertPageState();
+  State<EditProfileScreen> createState() => EditProfileScreenState();
 }
 
-class RegistertPageState extends State<RegistertScreen> {
+class EditProfileScreenState extends State<EditProfileScreen> {
   final _txtFirstName = TextEditingController();
   final _txtlasttName = TextEditingController();
   final _txtPassword = TextEditingController();

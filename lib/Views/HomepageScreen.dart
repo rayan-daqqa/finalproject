@@ -1,3 +1,4 @@
+import 'package:final_project/Views/AddContentScreen.dart';
 import'package:flutter/material.dart';
 import 'EditProfileScreen.dart';
 
@@ -68,6 +69,10 @@ class _MyHomePageState extends State<HomePageScreen> {
               title: const Text('Add Content'),
               selected: _selectedIndex == 0,
               onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddContentScreen()),
+                );
                 // Update the state of the app
                 _onItemTapped(0);
                 // Then close the drawer
@@ -78,16 +83,23 @@ class _MyHomePageState extends State<HomePageScreen> {
               title: const Text('Edit Profile'),
               selected: _selectedIndex == 1,
               onTap: () {
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EditProfileScreen(title: "Edit Profile")),
+                );
                 // Update the state of the app
                 _onItemTapped(1);
                 // Then close the drawer
-                Navigator.pop(context);
+                // Navigator.pop(context);
               },
             ),
             ListTile(
               title: const Text('Log Out'),
               selected: _selectedIndex == 2,
               onTap: () {
+
+
                 // Update the state of the app
                 _onItemTapped(2);
                 // Then close the drawer
