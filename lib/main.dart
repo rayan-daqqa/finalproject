@@ -123,79 +123,157 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    checkConction();
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+    return MaterialApp(
+      title: 'Login App',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
       ),
-      body: Center(
-
-        child: Column(
-
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text("Email:", style: TextStyle(fontSize:20),),
-        Container(
-          width: 500,
-          child:TextField(
-
-              decoration:InputDecoration(
-                border:OutlineInputBorder(),
-                hintText: 'enter your email',
-              ), ),),
-
-
-            Text("password:", style: TextStyle(fontSize:20),),
-            Container(
-              width: 500,
-              child:TextField(
-                decoration:InputDecoration(
-                  border:OutlineInputBorder(),
-                  hintText: 'enter your password ',
-                ), ),),
-
-            TextButton(
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePageScreen(title: 'homepage')),
-                );
-
-              },
-              child: Text('Login'),
-            ),
-
-
-            TextButton(
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-              ),
-              onPressed: () {
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const RegistertScreen(title: 'Creat account')),
-                );
-
-              },
-              child: Text('Create new account'),
-            )
-
-
-
-
-          ],
-        ),
-      ),
-
-
+      home: const MainLoginScreen(), // هون بحط شاشة تسجيل الدخول كـ home
     );
   }
-
 }
+
+class MainLoginScreen extends StatefulWidget {
+  const MainLoginScreen({Key? key}) : super(key: key);
+
+  @override
+  _MainLoginScreenState createState() => _MainLoginScreenState();
+}
+
+class _MainLoginScreenState extends State<MainLoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void _login() {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Missing Fields'),
+          content: const Text('Please enter both email and password.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePageScreen(title: 'homepage')),
+      );
+      print('Logging in with: ${_emailController.text}');
+      // لما المستخدم يدخل معلوماته بنجاح اعمله navigate لصفحة ثانية
+      // Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+    }
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.lock_outline,
+                size: 80,
+                color: Color(0xFF333366),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Welcome Back!',
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF333366),
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Log in to your account',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              const SizedBox(height: 40),
+              TextField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  prefixIcon: const Icon(Icons.email_outlined),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: _login,
+                child: const Text(
+                  'Log In',
+                  style: TextStyle(fontSize: 16),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF333366),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const RegistertScreen(title: 'Register')),
+                  );
+                  // روح على صفحة إنشاء حساب
+                },
+                child: const Text(
+                  'Create New Account',
+                  style: TextStyle(fontSize: 15),
+                ),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: const Color(0xFF333366),
+                  side: const BorderSide(color: Color(0xFF333366)),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  }
+
+

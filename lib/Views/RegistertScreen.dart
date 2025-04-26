@@ -127,7 +127,7 @@ class RegistertPageState extends State<RegistertScreen> {
                     ),
                   ),
                 ),
-               /* TextButton(
+                /*TextButton(
                   style: ButtonStyle(
                     foregroundColor: MaterialStateProperty.all<Color>(
                         Colors.blue),
@@ -136,8 +136,8 @@ class RegistertPageState extends State<RegistertScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                          const RegistertScreen(title: 'regester')),
+                          builder: (context) =>MainP
+                          const main(title: 'regester')),
                     );
                   },
                   child: Text('go back'),

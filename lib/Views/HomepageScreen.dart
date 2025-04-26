@@ -1,4 +1,5 @@
 import 'package:final_project/Views/AddContentScreen.dart';
+import 'package:final_project/Views/ProfileScreen.dart';
 import'package:flutter/material.dart';
 import 'EditProfileScreen.dart';
 
@@ -76,30 +77,43 @@ class _MyHomePageState extends State<HomePageScreen> {
                 // Update the state of the app
                 _onItemTapped(0);
                 // Then close the drawer
-                Navigator.pop(context);
+
               },
             ),
-            ListTile(
+           /* ListTile(
               title: const Text('Edit Profile'),
               selected: _selectedIndex == 1,
               onTap: () {
 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => EditProfileScreen(title: "Edit Profile")),
+                  MaterialPageRoute(builder: (context) =>CarsChanelScreen()),
                 );
                 // Update the state of the app
                 _onItemTapped(1);
                 // Then close the drawer
                 // Navigator.pop(context);
               },
-            ),
+            ),*/
             ListTile(
-              title: const Text('Log Out'),
+              title: const Text('My chanel'),
               selected: _selectedIndex == 2,
               onTap: () {
 
-
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>ProfileScreen(category: '',)),
+                );
+                // Update the state of the app
+                _onItemTapped(2);
+                // Then close the drawer
+                // Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Log Out'),
+              selected: _selectedIndex == 3,
+              onTap: () {
                 // Update the state of the app
                 _onItemTapped(2);
                 // Then close the drawer
@@ -113,3 +127,6 @@ class _MyHomePageState extends State<HomePageScreen> {
     );
   }
 }
+
+
+

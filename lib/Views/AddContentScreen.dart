@@ -1,238 +1,181 @@
-import 'package:final_project/Views/HomepageScreen.dart';
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-import '../Models/User.dart';
-import '../Utils/Utils.dart';
-import '../Utils/db.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddContentScreen extends StatefulWidget {
+  const AddContentScreen({Key? key}) : super(key: key);
+
   @override
   _AddContentScreenState createState() => _AddContentScreenState();
 }
 
 class _AddContentScreenState extends State<AddContentScreen> {
-  // Controllers للتحكم في النصوص المدخلة
+  String? selectedCategory;
   final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _channelTypeController = TextEditingController();
-  final TextEditingController _linkController = TextEditingController();
+  File? selectedMedia;
+  String? selectedType; // "Image", "Video", "Article"
 
-  // دالة لحفظ البيانات
-  void _saveContent() {
-    final String title = _titleController.text.trim();
-    final String channelType = _channelTypeController.text.trim();
-    final String link = _linkController.text.trim();
+  final picker = ImagePicker();
 
-    if (title.isEmpty || channelType.isEmpty || link.isEmpty) {
-      // إذا في حقل فارغ، يظهر رسالة تحذير
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill all the information')),
-      );
-    } else {
-      // هنا يمكن إرسال البيانات للسيرفر أو حفظها في قاعدة البيانات
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('The content was added successfully!')),
-      );
-
-      // تفريغ الحقول بعد الحفظ
-      _titleController.clear();
-      _channelTypeController.clear();
-      _linkController.clear();
+  Future<void> pickImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        selectedMedia = File(pickedFile.path);
+        selectedType = "Image";
+      });
     }
+  }
+
+  Future<void> pickVideo() async {
+    final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        selectedMedia = File(pickedFile.path);
+        selectedType = "Video";
+      });
+    }
+  }
+
+  void writeArticle() {
+    setState(() {
+      selectedType = "Article";
+    });
+  }
+
+  void showReviewDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Review Content'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Category: $selectedCategory'),
+              Text('Title: ${_titleController.text}'),
+              Text('Content Type: $selectedType'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                // احفظ المحتوى في قاعدة بياناتك أو بالذاكرة
+                Navigator.pop(context);
+                Navigator.pop(context); // رجع للمستخدم على البروفايل
+              },
+              child: const Text('Confirm'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add content'),
-        backgroundColor: Colors.teal,
+        title: const Text('Add Content'),
+        centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // حقل العنوان
-            TextField(
-              controller: _titleController,
-              decoration: InputDecoration(
-                labelText: 'Text',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 16),
-
-            // حقل نوع القناة
-            TextField(
-              controller: _channelTypeController,
-              decoration: InputDecoration(
-                labelText: 'Category',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 16),
-
-            // حقل الرابط
-            TextField(
-              controller: _linkController,
-              decoration: InputDecoration(
-                labelText: 'رابط المحتوى',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.url, // لتسهيل إدخال الروابط
-            ),
-            SizedBox(height: 24),
-
-            // زر الحفظ
-            ElevatedButton(
-              onPressed: _saveContent,
-              child: Text('Save'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                textStyle: TextStyle(fontSize: 18),
-              ),
-            ),
-          ],
+        padding: const EdgeInsets.all(16),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              if (selectedCategory == null)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Select Category:', style: TextStyle(fontSize: 18)),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 10,
+                      children: [
+                        buildCategoryButton('Health'),
+                        buildCategoryButton('Cars'),
+                        buildCategoryButton('Cooking'),
+                        buildCategoryButton('Home'),
+                        buildCategoryButton('Money Management'),
+                      ],
+                    ),
+                  ],
+                )
+              else
+                Column(
+                  children: [
+                    TextField(
+                      controller: _titleController,
+                      decoration: const InputDecoration(labelText: 'Enter Title'),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text('Choose Content Type:', style: TextStyle(fontSize: 18)),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 10,
+                      children: [
+                        ElevatedButton(
+                          onPressed: pickImage,
+                          child: const Text('Upload Image'),
+                        ),
+                        ElevatedButton(
+                          onPressed: pickVideo,
+                          child: const Text('Upload Video'),
+                        ),
+                        ElevatedButton(
+                          onPressed: writeArticle,
+                          child: const Text('Write Article'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        OutlinedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Cancel'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            if (_titleController.text.isNotEmpty && selectedType != null) {
+                              showReviewDialog();
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Please fill all fields')),
+                              );
+                            }
+                          },
+                          child: const Text('Save'),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+            ],
+          ),
         ),
       ),
     );
   }
-}
-  /*const Addcontentscreen({super.key, required this.title});
 
-  final String title;
-
-  @override
-  State<Addcontentscreen> createState() => AddContentPageState();
-}
-
-class AddContentPageState extends State<Addcontentscreen> {
-  final _txttopic = TextEditingController();
-  final _txtcategory = TextEditingController();
-
-
-  void Insertchannelfunc() {
-    if (_txttopic.text != ""||_txtcategory.text != "") {
-      
-      
-      
-      /*
-      var uti=new Utils();
-      uti.showMyDialog(context, "success", "you registed successfully");
-      _txtFirstName.text="";
-      _txtlasttName.text="";
-      _txtPassword.text="";
-      */
-    } else {
-      var uti = new Utils();
-      uti.showMyDialog(context, "Required", "Please insert first name");
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
-
-  /*@override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              "FirstName*:",
-              style: TextStyle(fontSize: 20),
-            ),
-            Container(
-              width: 500,
-              child: TextField(
-                controller: _txtFirstName,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'enter your FirstName',
-                ),
-              ),
-            ),
-            Text(
-              "LastName:",
-              style: TextStyle(fontSize: 20),
-            ),
-            Container(
-              width: 500,
-              child: TextField(
-                controller: _txtlasttName,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'enter your LastName',
-                ),
-              ),
-            ),
-            Text(
-              "email*:",
-              style: TextStyle(fontSize: 20),
-            ),
-            Container(
-              width: 500,
-              child: TextField(
-                controller: _txtEmail,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'enter your email',
-                ),
-              ),
-            ),
-            Text(
-              "password*:",
-              style: TextStyle(fontSize: 20),
-            ),
-            Container(
-              width: 500,
-              child: TextField(
-                controller: _txtPassword,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'enter your password',
-                ),
-              ),
-            ),
-            TextButton(
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                      const HomePageScreen(title: 'login')),
-                );
-              },
-              child: Text('HomePage'),
-            ),
-            TextButton(
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-              ),
-              onPressed: () {
-                // var uti = new Utils();
-                // uti.showMyDialog(context, _txtFirstName.text, _txtFirstName.text);
-
-                InsertUserFunc();
-              },
-              child: Text('creat'),
-            ),
-          ],
-        ),
-      ),
+  Widget buildCategoryButton(String category) {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          selectedCategory = category;
+        });
+      },
+      child: Text(category),
     );
   }
 }
-*/
-   */
