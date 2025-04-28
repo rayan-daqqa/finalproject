@@ -250,7 +250,7 @@ class _MainLoginScreenState extends State<MainLoginScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const RegistertScreen(title: 'Register')),
+                    MaterialPageRoute(builder: (context) => RegisterScreen()),
                   );
                   // روح على صفحة إنشاء حساب
                 },
