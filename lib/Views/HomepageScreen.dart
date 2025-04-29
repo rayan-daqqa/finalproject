@@ -1,7 +1,14 @@
+import 'dart:convert';
+import 'package:final_project/Models/Channel.dart';
 import 'package:final_project/Views/AddContentScreen.dart';
 import 'package:final_project/Views/ProfileScreen.dart';
 import'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../Models/Category.dart';
+import '../Utils/CliendConfing.dart';
+import 'ChanelListScreen.dart';
 import 'EditProfileScreen.dart';
+import 'package:http/http.dart' as http;
 
 
 
@@ -19,11 +26,23 @@ class _MyHomePageState extends State<HomePageScreen> {
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+     _selectedIndex = index;
     });
   }
 
+  Future getMyCategories() async {
 
+    var url = "categories/getCategories.php";
+    final response = await http.get(Uri.parse(serverPath + url));
+    print(serverPath + url);
+    List<category> arr = [];
+
+    for(Map<String, dynamic> i in json.decode(response.body)){
+      arr.add(category.fromJson(i));
+    }
+    print("arr:" + arr.length.toString());
+    return arr;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,22 +54,75 @@ class _MyHomePageState extends State<HomePageScreen> {
             .inversePrimary,
         title: Text(widget.title),
       ),
-      body: GridView.count(
-        // Create a grid with 2 columns. If you change the scrollDirection to
-        // horizontal, this produces 2 rows.
-        crossAxisCount: 2,
-        // Generate 100 widgets that display their index in the List.
-        children: List.generate(100, (index) {
-          return Center(
-            child: Text(
-              'Item $index',
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .headlineSmall,
-            ),
-          );
-        }),
+      body: FutureBuilder(
+        future: getMyCategories(),
+        builder: (context, projectSnap) {
+          if (projectSnap.hasData) {
+            if (projectSnap.data.length == 0)
+            {
+              return SizedBox(
+                height: MediaQuery.of(context).size.height * 2,
+                child: Align(
+                    alignment: Alignment.center,
+                    child: Text('אין תוצאות', style: TextStyle(fontSize: 23, color: Colors.black))
+                ),
+              );
+            }
+            else {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+
+                  Expanded(
+                      child:ListView.builder(
+                        itemCount: projectSnap.data.length,
+                        itemBuilder: (context, index) {
+                          category project = projectSnap.data[index];
+
+                          return Card(
+                              child: ListTile(
+                                onTap: () async {
+
+                                  final SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  await prefs.setInt('lastCatID', project.categoryID);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) =>ChanellistScreen (title: project.categoryName,)),
+                                  );
+
+                                },
+                                title: Text(project.categoryName.toString(), style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),), // Icon(Icons.timer),
+                                trailing: Image.network(project.imageCat,
+                                ),
+                                // subtitle: Text(project.categoryName!.toString(), style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),),
+                                // trailing: Container(
+                                //   decoration: const BoxDecoration(
+                                //     color: Colors.blue,
+                                //     borderRadius: BorderRadius.all(Radius.circular(5)),
+                                //   ),
+                                //   padding: const EdgeInsets.symmetric(
+                                //     horizontal: 12,
+                                //     vertical: 4,
+                                //   ),
+                                //
+                                // ),
+
+                                isThreeLine: false,
+                              ));
+                        },
+                      )),
+                ],
+              );
+            }
+          }
+          else if (projectSnap.hasError)
+          {
+            print(projectSnap.error);
+            return  Center(child: Text('שגיאה, נסה שוב', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)));
+          }
+          return Center(child: new CircularProgressIndicator(color: Colors.red,));
+        },
       ),
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll

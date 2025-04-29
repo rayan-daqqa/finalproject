@@ -1,18 +1,26 @@
 class Channel{
   Channel({
-    this.channelID="",
+    this.channelID=0,
     this.ImageURL="",
     this.channelName="",
+    this.channelLinks="",
+    this.categoryID=0,
+
+
 
   });
-  String channelID;
+  int channelID;
   String channelName;
   String ImageURL;
+  String channelLinks;
+  int categoryID;
 
   factory Channel. fromJson(Map<String, dynamic>json )=> Channel(
     channelID:json["channelID"],
     channelName:json["channelName"],
     ImageURL:json["ImageURL"],
+    channelLinks:json["channelLinks"],
+    categoryID:json["categoryID"],
 
 
   );
@@ -20,5 +28,7 @@ class Channel{
       "ChannelID":channelID,
       "ChannelName":channelName,
       "ImageURL":ImageURL,
+      "Links":channelLinks,
+      "categoryID":categoryID,
     };
 }
