@@ -48,7 +48,7 @@ class ChannelPageState extends State<ChannelDetailsScreen> {
   Future insertpagetofollowinglist(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userID = prefs.getString("userID");
-    var url = "carts/insertpagetofollowinglist.php?userID=" +
+    var url = "carts/insertpagetoSavedlist.php?userID=" +
         userID! +
         "&channelID=" +
         _currChannel.channelID.toString();
@@ -57,7 +57,7 @@ class ChannelPageState extends State<ChannelDetailsScreen> {
     setState(() {});
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Added to following list!')),
+      const SnackBar(content: Text('Added to saved list!')),
     );
 
   }
@@ -70,7 +70,7 @@ class ChannelPageState extends State<ChannelDetailsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("life skills", style: TextStyle(fontWeight: FontWeight.bold,
+        title: Text("New life skills", style: TextStyle(fontWeight: FontWeight.bold,
             fontSize: 30,
             color: Colors.white)),
         centerTitle: true,
@@ -136,7 +136,7 @@ class ChannelPageState extends State<ChannelDetailsScreen> {
                     },
 
                     icon: const Icon(Icons.shopping_cart),
-                    label: const Text('Add to following list'),
+                    label: const Text('Add to saved list'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.teal,
                       padding: const EdgeInsets.symmetric(

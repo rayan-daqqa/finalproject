@@ -78,7 +78,7 @@ class _MyProfilePageState extends State<ProfileScreen> {
                 label: 'Saved Videos',
                 onPressed: _navigateToSaved,
               ),
-              _buildButton(
+             /* _buildButton(
                 icon: Icons.people,
                 label: 'Followers',
                 onPressed: _navigateToFollowers,
@@ -87,7 +87,7 @@ class _MyProfilePageState extends State<ProfileScreen> {
                 icon: Icons.person_add,
                 label: 'Following',
                 onPressed: _navigateToFollowing,
-              ),
+              ),*/
               const SizedBox(height: 20),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
