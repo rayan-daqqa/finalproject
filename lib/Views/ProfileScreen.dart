@@ -1,8 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:final_project/main.dart'; // مهم لاستدعاء MyHomePage
 
-// الصفحة الرئيسية للبروفايل
 class ProfileScreen extends StatefulWidget {
   final String category;
 
@@ -20,6 +21,7 @@ class _MyProfilePageState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Profile'),
@@ -78,16 +80,6 @@ class _MyProfilePageState extends State<ProfileScreen> {
                 label: 'Saved Videos',
                 onPressed: _navigateToSaved,
               ),
-             /* _buildButton(
-                icon: Icons.people,
-                label: 'Followers',
-                onPressed: _navigateToFollowers,
-              ),
-              _buildButton(
-                icon: Icons.person_add,
-                label: 'Following',
-                onPressed: _navigateToFollowing,
-              ),*/
               const SizedBox(height: 20),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
@@ -122,7 +114,6 @@ class _MyProfilePageState extends State<ProfileScreen> {
     );
   }
 
-  // pop-up لتغيير الاسم
   void _showEditNameDialog() {
     TextEditingController _controller = TextEditingController(text: username);
     showDialog(
@@ -157,7 +148,6 @@ class _MyProfilePageState extends State<ProfileScreen> {
     );
   }
 
-  // pop-up لاختيار الصورة
   void _showChangePictureOptions() {
     showModalBottomSheet(
       context: context,
@@ -208,8 +198,8 @@ class _MyProfilePageState extends State<ProfileScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Confirm Delete'),
-          content: const Text('Are you sure you want to delete your account?'),
+          title: const Text('Delet account'),
+          content: const Text('Are you sure you want to delete this account'),
           actions: [
             TextButton(
               child: const Text('Cancel'),
@@ -218,8 +208,14 @@ class _MyProfilePageState extends State<ProfileScreen> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               child: const Text('Delete'),
-              onPressed: () {
-                Navigator.of(context).popUntil((route) => route.isFirst);
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                await prefs.clear();
+
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const MyHomePage(title: 'main')),
+                      (Route<dynamic> route) => false,
+                );
               },
             ),
           ],
@@ -234,25 +230,12 @@ class _MyProfilePageState extends State<ProfileScreen> {
       MaterialPageRoute(builder: (context) => const SavedVideosPage()),
     );
   }
-
-  void _navigateToFollowers() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const FollowersPage()),
-    );
-  }
-
-  void _navigateToFollowing() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const FollowingPage()),
-    );
-  }
 }
 
 // صفحة الفيديوهات المحفوظة
 class SavedVideosPage extends StatelessWidget {
   const SavedVideosPage({super.key});
+
   final List<String> savedVideos = const ['Video 1', 'Video 2', 'Video 3'];
 
   @override
@@ -270,54 +253,4 @@ class SavedVideosPage extends StatelessWidget {
       ),
     );
   }
-}
-
-// صفحة المتابعين
-class FollowersPage extends StatelessWidget {
-  const FollowersPage({super.key});
-  final List<String> followers = const ['Follower 1', 'Follower 2', 'Follower 3'];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Followers')),
-      body: ListView.builder(
-        itemCount: followers.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: const CircleAvatar(child: Icon(Icons.person)),
-            title: Text(followers[index]),
-          );
-        },
-      ),
-    );
-  }
-}
-
-// صفحة الأشخاص المتابعين
-class FollowingPage extends StatelessWidget {
-  const FollowingPage({super.key});
-
-  final List<String> following = const [
-    'Following 1',
-    'Following 2',
-    'Following 3'
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Following')),
-      body: ListView.builder(
-        itemCount: following.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: const CircleAvatar(child: Icon(Icons.person_outline)),
-            title: Text(following[index]),
-          );
-        },
-      ),
-    );
-  }
-
 }
