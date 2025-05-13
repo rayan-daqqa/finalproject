@@ -1,18 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Models/Channel.dart';
+import '../Models/Content.dart';
 import 'package:http/http.dart' as http;
-import '../Utils/CliendConfing.dart';
-import 'ChannelDetailsScreen.dart';
-
-
-
-
+import '../Utils/ClientConfing.dart';
+import 'ContentDetailsScreen.dart';
 
 class ChanellistScreen extends StatefulWidget {
   const ChanellistScreen({super.key, required this.title});
-
 
   final String title;
 
@@ -21,122 +16,99 @@ class ChanellistScreen extends StatefulWidget {
 }
 
 class _ChanelListScreen extends State<ChanellistScreen> {
+  // ألوان الباستيل
+  final Color pastelBlue = const Color(0xFFA8DADC);
+  final Color pastelPink = const Color(0xFFFBC4AB);
+  final Color pastelPurple = const Color(0xFFE0BBE4);
+  final Color pastelGreen = const Color(0xFFB5EAD7);
 
-  static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-
-
-
-  Future getchanels() async {
-
+  Future<List<Content>> getchanels() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final int? lastCategoryID = prefs.getInt('lastCatID');
+    final int? lastChannelID = prefs.getInt('lastChannelID');
 
-
-    var url = "chanels/getChanels.php?categoryID=" + lastCategoryID.toString();
+    var url = "chanels/getChanelDetails.php?channelID=${lastChannelID.toString()}";
     final response = await http.get(Uri.parse(serverPath + url));
-    print(serverPath + url);
-    List<Channel> arr = [];
+    List<Content> arr = [];
 
-    for(Map<String, dynamic> i in json.decode(response.body)){
-      arr.add(Channel.fromJson(i));
+    for (Map<String, dynamic> i in json.decode(response.body)) {
+      arr.add(Content.fromJson(i));
     }
 
     return arr;
   }
 
-
-
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: pastelPurple.withOpacity(0.1),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        backgroundColor: pastelPurple,
+        title: Text(widget.title, style: const TextStyle(color: Colors.black)),
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<List<Content>>(
         future: getchanels(),
-        builder: (context, projectSnap) {
-          if (projectSnap.hasData) {
-            if (projectSnap.data.length == 0) {
-              return SizedBox(
-                height: MediaQuery.of(context).size.height * 2,
-                child: Align(
-                    alignment: Alignment.center,
-                    child: Text('אין תוצאות',
-                        style: TextStyle(fontSize: 23, color: Colors.black))),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data!.isEmpty) {
+              return Center(
+                child: Text(
+                  'אין תוצאות',
+                  style: TextStyle(fontSize: 23, color: Colors.black),
+                ),
               );
             } else {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                      child: ListView.builder(
-                        itemCount: projectSnap.data.length,
-                        itemBuilder: (context, index) {
-                          Channel project = projectSnap.data[index];
-
-                          return Card(
-                              child: ListTile(
-                                onTap: () async {
-                                  final SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                                  await prefs.setInt(
-                                      'lastchannelID', project.channelID);
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ChannelDetailsScreen(
-                                          title: project.channelName,
-                                        )),
-                                  );
-                                },
-                                title: Text(
-                                  project.channelName,
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black),
-                                ), // Icon(Icons.timer),
-
-                                trailing: Image.network(
-                                  project.ImageURL,
-                                ),
-                                // trailing: Container(
-                                //   decoration: const BoxDecoration(
-                                //     color: Colors.blue,
-                                //     borderRadius: BorderRadius.all(Radius.circular(5)),
-                                //   ),
-                                //   padding: const EdgeInsets.symmetric(
-                                //     horizontal: 12,
-                                //     vertical: 4,
-                                //   ),
-                                //   child: Text(
-                                //     project.totalHours!,   // + "שעות "
-                                //     overflow: TextOverflow.ellipsis,
-                                //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                                //   ),
-                                // ),
-
-                                isThreeLine: false,
-                              ));
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  Content content = snapshot.data![index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      color: pastelBlue.withOpacity(0.3),
+                      child: ListTile(
+                        onTap: () async {
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.setInt('lastContentID', content.contentID);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChannelDetailsScreen(title: content.content),
+                            ),
+                          );
                         },
-                      )),
-                ],
+                        contentPadding: const EdgeInsets.all(16),
+                        title: Text(
+                          content.title,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        trailing: Icon(Icons.arrow_forward_ios, color: pastelPurple),
+                      ),
+                    ),
+                  );
+                },
               );
             }
-          } else if (projectSnap.hasError) {
-            print(projectSnap.error);
+          } else if (snapshot.hasError) {
             return Center(
-                child: Text('שגיאה, נסה שוב',
-                    style:
-                    TextStyle(fontSize: 22, fontWeight: FontWeight.bold)));
+              child: Text(
+                'שגיאה, נסה שוב',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+            );
           }
-          return Center(
-              child: new CircularProgressIndicator(
-                color: Colors.red,
-              ));
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Colors.pinkAccent,
+            ),
+          );
         },
       ),
     );

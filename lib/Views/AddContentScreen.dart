@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -14,9 +13,15 @@ class _AddContentScreenState extends State<AddContentScreen> {
   String? selectedCategory;
   final TextEditingController _titleController = TextEditingController();
   File? selectedMedia;
-  String? selectedType; // "Image", "Video", "Article"
+  String? selectedType;
 
   final picker = ImagePicker();
+
+  // ألوان الباستيل
+  final pastelBlue = const Color(0xFFA8DADC);
+  final pastelPink = const Color(0xFFFBC4AB);
+  final pastelPurple = const Color(0xFFE0BBE4);
+  final pastelGreen = const Color(0xFFB5EAD7);
 
   Future<void> pickImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -36,12 +41,6 @@ class _AddContentScreenState extends State<AddContentScreen> {
         selectedType = "Video";
       });
     }
-  }
-
-  void writeArticle() {
-    setState(() {
-      selectedType = "Article";
-    });
   }
 
   void showReviewDialog() {
@@ -64,12 +63,14 @@ class _AddContentScreenState extends State<AddContentScreen> {
               onPressed: () => Navigator.pop(context),
               child: const Text('Cancel'),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: () {
-                // احفظ المحتوى في قاعدة بياناتك أو بالذاكرة
                 Navigator.pop(context);
-                Navigator.pop(context); // رجع للمستخدم على البروفايل
+                Navigator.pop(context);
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: pastelGreen,
+              ),
               child: const Text('Confirm'),
             ),
           ],
@@ -78,11 +79,29 @@ class _AddContentScreenState extends State<AddContentScreen> {
     );
   }
 
+  Widget buildCategoryButton(String category) {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          selectedCategory = category;
+        });
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: pastelBlue,
+        foregroundColor: Colors.black,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      child: Text(category),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: pastelPurple.withOpacity(0.1),
       appBar: AppBar(
         title: const Text('Add Content'),
+        backgroundColor: pastelPurple,
         centerTitle: true,
       ),
       body: Padding(
@@ -94,10 +113,11 @@ class _AddContentScreenState extends State<AddContentScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Select Category:', style: TextStyle(fontSize: 18)),
+                    const Text('Select Category:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 10),
                     Wrap(
                       spacing: 10,
+                      runSpacing: 10,
                       children: [
                         buildCategoryButton('Health'),
                         buildCategoryButton('Cars'),
@@ -110,27 +130,69 @@ class _AddContentScreenState extends State<AddContentScreen> {
                 )
               else
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextField(
                       controller: _titleController,
-                      decoration: const InputDecoration(labelText: 'Enter Title'),
+                      decoration: InputDecoration(
+                        labelText: 'Enter Title',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
                     ),
                     const SizedBox(height: 20),
-                    const Text('Choose Content Type:', style: TextStyle(fontSize: 18)),
+                    const Text('Choose Content Type:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 10),
                     Wrap(
                       spacing: 10,
+                      runSpacing: 10,
                       children: [
                         ElevatedButton(
                           onPressed: pickImage,
+                          style: ElevatedButton.styleFrom(backgroundColor: pastelPink),
                           child: const Text('Upload Image'),
                         ),
                         ElevatedButton(
                           onPressed: pickVideo,
+                          style: ElevatedButton.styleFrom(backgroundColor: pastelBlue),
                           child: const Text('Upload Video'),
                         ),
                         ElevatedButton(
-                          onPressed: writeArticle,
+                          onPressed: () {
+                            String articleText = '';
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Write Article'),
+                                  content: TextField(
+                                    onChanged: (value) => articleText = value,
+                                    maxLines: 5,
+                                    decoration: const InputDecoration(hintText: "Enter your article here"),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        print('Saved article: $articleText');
+                                        Navigator.of(context).pop();
+                                        setState(() {
+                                          selectedType = "Article";
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(backgroundColor: pastelGreen),
+                                      child: const Text('Save'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(backgroundColor: pastelPurple),
                           child: const Text('Write Article'),
                         ),
                       ],
@@ -140,9 +202,11 @@ class _AddContentScreenState extends State<AddContentScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         OutlinedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                          onPressed: () => Navigator.pop(context),
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: pastelBlue),
+                            foregroundColor: Colors.black,
+                          ),
                           child: const Text('Cancel'),
                         ),
                         ElevatedButton(
@@ -155,6 +219,7 @@ class _AddContentScreenState extends State<AddContentScreen> {
                               );
                             }
                           },
+                          style: ElevatedButton.styleFrom(backgroundColor: pastelGreen),
                           child: const Text('Save'),
                         ),
                       ],
@@ -165,17 +230,6 @@ class _AddContentScreenState extends State<AddContentScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget buildCategoryButton(String category) {
-    return ElevatedButton(
-      onPressed: () {
-        setState(() {
-          selectedCategory = category;
-        });
-      },
-      child: Text(category),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,6 +28,13 @@ class _NewsSearchScreenState extends State<NewsSearchScreen> {
   bool _loading = false;
 
   Future<void> fetchNews(String query) async {
+    if (query.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('من فضلك أدخل موضوع البحث')),
+      );
+      return;
+    }
+
     setState(() => _loading = true);
 
     final apiKey = "YOUR_NEWSAPI_KEY"; // استبدلها بمفتاح API الخاص بك
@@ -42,11 +50,19 @@ class _NewsSearchScreenState extends State<NewsSearchScreen> {
           _loading = false;
         });
       } else {
-        throw Exception("Failed to load articles");
+        throw Exception("فشل في تحميل المقالات");
       }
     } catch (e) {
       setState(() => _loading = false);
-      print("Error: $e");
+      print("خطأ: $e");
+    }
+  }
+
+  Future<void> _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'لا يمكن فتح الرابط $url';
     }
   }
 
@@ -72,18 +88,24 @@ class _NewsSearchScreenState extends State<NewsSearchScreen> {
             SizedBox(height: 16),
             _loading
                 ? CircularProgressIndicator()
+                : _articles.isEmpty
+                ? Center(child: Text('لم يتم العثور على نتائج.'))
                 : Expanded(
               child: ListView.builder(
                 itemCount: _articles.length,
                 itemBuilder: (context, index) {
                   final article = _articles[index];
-                  return ListTile(
-                    title: Text(article["title"] ?? "بدون عنوان"),
-                    subtitle: Text(article["source"]["name"] ?? "مصدر غير معروف"),
-                    onTap: () {
-                      // فتح المقالة في المتصفح عند النقر عليها
-                      print("فتح الرابط: ${article["url"]}");
-                    },
+                  return Card(
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ListTile(
+                      title: Text(article["title"] ?? "بدون عنوان"),
+                      subtitle: Text(article["source"]["name"] ?? "مصدر غير معروف"),
+                      onTap: () => _launchURL(article["url"]),
+                    ),
                   );
                 },
               ),

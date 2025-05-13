@@ -1,14 +1,13 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:final_project/Models/Channel.dart';
 import 'package:final_project/Views/AddContentScreen.dart';
 import 'package:final_project/Views/ProfileScreen.dart';
 import 'package:final_project/main.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Models/Category.dart';
-import '../Utils/CliendConfing.dart';
+import '../Utils/ClientConfing.dart';
 import 'ChanelListScreen.dart';
-import 'EditProfileScreen.dart';
 import 'package:http/http.dart' as http;
 
 class HomePageScreen extends StatefulWidget {
@@ -22,132 +21,146 @@ class HomePageScreen extends StatefulWidget {
 class _MyHomePageState extends State<HomePageScreen> {
   int _selectedIndex = 0;
 
+  final Color pastelBlue = const Color(0xFFA8DADC);
+  final Color pastelPink = const Color(0xFFFBC4AB);
+  final Color pastelPurple = const Color(0xFFE0BBE4);
+  final Color pastelGreen = const Color(0xFFB5EAD7);
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
-  Future getMyCategories() async {
-    var url = "categories/getCategories.php";
+  Future<List<Channel>> getMyCategories() async {
+    var url = "chanels/getChanels.php";
     final response = await http.get(Uri.parse(serverPath + url));
-    print(serverPath + url);
-    List<category> arr = [];
-
+    List<Channel> arr = [];
     for (Map<String, dynamic> i in json.decode(response.body)) {
-      arr.add(category.fromJson(i));
+      arr.add(Channel.fromJson(i));
     }
-    print("arr:" + arr.length.toString());
     return arr;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: pastelPurple.withOpacity(0.1),
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text(widget.title,
+            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w600)),
+        backgroundColor: pastelPurple,
+        elevation: 4,
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<List<Channel>>(
         future: getMyCategories(),
-        builder: (context, projectSnap) {
-          if (projectSnap.hasData) {
-            if (projectSnap.data.length == 0) {
-              return SizedBox(
-                height: MediaQuery.of(context).size.height * 2,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text('אין תוצאות', style: TextStyle(fontSize: 23, color: Colors.black)),
-                ),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text('لا توجد نتائج', style: TextStyle(fontSize: 20)),
               );
             } else {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: projectSnap.data.length,
-                      itemBuilder: (context, index) {
-                        category project = projectSnap.data[index];
-
-                        return Card(
-                          child: ListTile(
-                            onTap: () async {
-                              final SharedPreferences prefs = await SharedPreferences.getInstance();
-                              await prefs.setInt('lastCatID', project.categoryID);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => ChanellistScreen(title: project.categoryName)),
-                              );
-                            },
-                            title: Text(
-                              project.categoryName.toString(),
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
-                            ),
-                            trailing: Image.network(project.imageCat),
-                            isThreeLine: false,
-                          ),
+              return ListView.builder(
+                padding: const EdgeInsets.all(12),
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  Channel project = snapshot.data![index];
+                  return Card(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    elevation: 4,
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      onTap: () async {
+                        final SharedPreferences prefs = await SharedPreferences.getInstance();
+                        await prefs.setInt('lastChannelID', project.channelID);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ChanellistScreen(title: project.channelName)),
                         );
                       },
+                      title: Text(
+                        project.channelName,
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      trailing: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: CachedNetworkImage(
+                          imageUrl: project.ImageURL,
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                  );
+                },
               );
             }
-          } else if (projectSnap.hasError) {
-            print(projectSnap.error);
-            return Center(child: Text('שגיאה, נסה שוב', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)));
+          } else if (snapshot.hasError) {
+            return const Center(
+              child: Text('حدث خطأ أثناء التحميل', style: TextStyle(fontSize: 18)),
+            );
           }
-          return Center(child: new CircularProgressIndicator(color: Colors.red));
+          return const Center(child: CircularProgressIndicator());
         },
       ),
       drawer: Drawer(
+        backgroundColor: pastelBlue.withOpacity(0.2),
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: pastelBlue,
               ),
-              child: Text('Drawer Header'),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'مرحباً بك 👋',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'اختر من القائمة أدناه',
+                    style: TextStyle(fontSize: 16, color: Colors.white70),
+                  ),
+                ],
+              ),
             ),
             ListTile(
+              leading: const Icon(Icons.add),
               title: const Text('Add Content'),
-              selected: _selectedIndex == 0,
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddContentScreen()),
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const AddContentScreen()));
                 _onItemTapped(0);
               },
             ),
             ListTile(
-              title: const Text('My chanel'),
-              selected: _selectedIndex == 2,
+              leading: const Icon(Icons.person),
+              title: const Text('My Channel'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfileScreen(category: '')),
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen(category: '')));
                 _onItemTapped(2);
               },
             ),
             ListTile(
+              leading: const Icon(Icons.logout),
               title: const Text('Log Out'),
-              selected: _selectedIndex == 3,
               onTap: () async {
-                // حذف بيانات المستخدم من SharedPreferences
                 final SharedPreferences prefs = await SharedPreferences.getInstance();
                 await prefs.clear();
-
-                // تحديث الحالة وإرجاع المستخدم لصفحة البداية
                 _onItemTapped(3);
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => const MyHomePage(title: 'Main')),
-                      (Route<dynamic> route) => false, // تمنع العودة لهذه الصفحة
+                      (route) => false,
                 );
               },
             ),

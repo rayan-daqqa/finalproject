@@ -5,13 +5,15 @@ class User{
     this.lastName="",
     this.userID="",
     this.email="",
-
+    this.profileImgURL="",
   });
+
   String Password;
   String firstName;
   String lastName;
   String userID;
   String email;
+  String profileImgURL;
 
 
   factory User. fromJson(Map<String, dynamic>json )=> User(
@@ -20,15 +22,15 @@ class User{
     lastName:json["lastName"],
     userID:json["userID"],
     email:json["email"],
-
-
+    profileImgURL:json["profileImgURL"],
   );
+
     Map< String, dynamic>tojson()=>{
       "Password":Password,
       "firstName":firstName,
       "lastName":lastName,
       "userID":userID,
       "email":email,
-
+      "profileImgURL":profileImgURL,
     };
 }

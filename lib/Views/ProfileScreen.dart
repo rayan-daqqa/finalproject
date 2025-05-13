@@ -2,7 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:final_project/main.dart'; // مهم لاستدعاء MyHomePage
+import 'package:final_project/main.dart';
+import 'package:final_project/Views/SavedList.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String category;
@@ -18,14 +19,20 @@ class _MyProfilePageState extends State<ProfileScreen> {
   File? _profileImage;
   final picker = ImagePicker();
 
+  final Color pastelPurple = const Color(0xFFE0BBE4);
+  final Color pastelBlue = const Color(0xFFA8DADC);
+  final Color pastelGreen = const Color(0xFFB5EAD7);
+  final Color pastelPink = const Color(0xFFFBC4AB);
+
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
+      backgroundColor: pastelPurple.withOpacity(0.1),
       appBar: AppBar(
-        title: const Text('My Profile'),
+        backgroundColor: pastelPurple,
+        title: const Text('My Profile', style: TextStyle(color: Colors.black)),
         centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -36,31 +43,33 @@ class _MyProfilePageState extends State<ProfileScreen> {
               Text(
                 "Category: ${widget.category}",
                 style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: isDarkMode ? Colors.teal[100] : Colors.teal[700],
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: pastelPurple,
                 ),
               ),
               const SizedBox(height: 30),
               GestureDetector(
                 onTap: _showChangePictureOptions,
-                child: CircleAvatar(
-                  radius: 60,
-                  backgroundImage: _profileImage != null
-                      ? FileImage(_profileImage!)
-                      : const AssetImage('assets/profile.jpg') as ImageProvider,
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: CircleAvatar(
-                      radius: 18,
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.camera_alt,
-                        size: 20,
-                        color: Colors.teal,
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 60,
+                      backgroundColor: pastelPink.withOpacity(0.5),
+                      backgroundImage: _profileImage != null
+                          ? FileImage(_profileImage!)
+                          : const AssetImage('assets/profile.jpg') as ImageProvider,
+                    ),
+                    Positioned(
+                      bottom: 4,
+                      right: 4,
+                      child: CircleAvatar(
+                        radius: 18,
+                        backgroundColor: Colors.white,
+                        child: Icon(Icons.camera_alt, size: 20, color: pastelPurple),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ),
               const SizedBox(height: 15),
@@ -68,30 +77,25 @@ class _MyProfilePageState extends State<ProfileScreen> {
                 onTap: _showEditNameDialog,
                 child: Text(
                   username,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(height: 30),
               _buildButton(
                 icon: Icons.bookmark,
                 label: 'Saved Videos',
-                onPressed: _navigateToSaved,
+                onPressed: _navigateToSavedList,
               ),
               const SizedBox(height: 20),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 ),
                 onPressed: _confirmDeleteAccount,
                 icon: const Icon(Icons.delete),
-                label: const Text(
-                  'Delete Account',
-                  style: TextStyle(fontSize: 16),
-                ),
+                label: const Text('Delete Account', style: TextStyle(fontSize: 16)),
               ),
             ],
           ),
@@ -100,14 +104,17 @@ class _MyProfilePageState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildButton({required IconData icon, required String label, required VoidCallback onPressed}) {
+  Widget _buildButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
     return Card(
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        leading: Icon(icon, color: Colors.teal),
-        title: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+        leading: Icon(icon, color: pastelBlue),
+        title: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
         trailing: const Icon(Icons.arrow_forward_ios, size: 18),
         onTap: onPressed,
       ),
@@ -198,8 +205,8 @@ class _MyProfilePageState extends State<ProfileScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Delet account'),
-          content: const Text('Are you sure you want to delete this account'),
+          title: const Text('Delete account'),
+          content: const Text('Are you sure you want to delete this account?'),
           actions: [
             TextButton(
               child: const Text('Cancel'),
@@ -211,7 +218,6 @@ class _MyProfilePageState extends State<ProfileScreen> {
               onPressed: () async {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 await prefs.clear();
-
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => const MyHomePage(title: 'main')),
                       (Route<dynamic> route) => false,
@@ -224,33 +230,10 @@ class _MyProfilePageState extends State<ProfileScreen> {
     );
   }
 
-  void _navigateToSaved() {
+  void _navigateToSavedList() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const SavedVideosPage()),
-    );
-  }
-}
-
-// صفحة الفيديوهات المحفوظة
-class SavedVideosPage extends StatelessWidget {
-  const SavedVideosPage({super.key});
-
-  final List<String> savedVideos = const ['Video 1', 'Video 2', 'Video 3'];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Saved Videos')),
-      body: ListView.builder(
-        itemCount: savedVideos.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: const Icon(Icons.video_library),
-            title: Text(savedVideos[index]),
-          );
-        },
-      ),
+      MaterialPageRoute(builder: (context) => SavedList()),
     );
   }
 }
