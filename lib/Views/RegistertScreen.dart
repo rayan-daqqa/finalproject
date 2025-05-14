@@ -17,6 +17,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   final String serverPath = "https://darkgray-hummingbird-925566.hostingersite.com/ryan/";
 
+
   final Color pastelPurple = const Color(0xFFE0BBE4);
   final Color pastelBlue = const Color(0xFFA8DADC);
   final Color pastelGreen = const Color(0xFFB5EAD7);
@@ -42,7 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('خطأ: $e')),
+        SnackBar(content: Text('Error: $e')),
       );
     } finally {
       setState(() => _isLoading = false);
@@ -72,13 +73,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         labelText: label,
         labelStyle: TextStyle(color: pastelPurple),
         filled: true,
-        fillColor: pastelBlue.withOpacity(0.1),
+        fillColor: pastelBlue.withOpacity(0.2),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: pastelPurple),
+          borderSide: BorderSide(color: pastelPink),
           borderRadius: BorderRadius.circular(10),
         ),
-        prefixIcon: Icon(icon, color: pastelPurple),
+        prefixIcon: Icon(icon, color: pastelGreen),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) return 'Please enter $label';
@@ -92,7 +93,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: pastelGreen.withOpacity(0.1),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Create Account', style: TextStyle(color: Colors.black)),
         centerTitle: true,
@@ -116,18 +117,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
               buildTextField('Password', _passwordController, isPassword: true),
               const SizedBox(height: 30),
               _isLoading
-                  ? CircularProgressIndicator(color: pastelPurple)
+                  ? CircularProgressIndicator(color: pastelPink)
                   : SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: registerUser,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: pastelPurple,
+                    backgroundColor: pastelGreen,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     textStyle: const TextStyle(fontSize: 18),
                   ),
-                  child: const Text('Sign Up'),
+                  child: const Text('Sign Up', style: TextStyle(color: Colors.white)),
                 ),
               ),
             ],

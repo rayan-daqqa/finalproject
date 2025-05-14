@@ -19,6 +19,7 @@ class _MyProfilePageState extends State<ProfileScreen> {
   File? _profileImage;
   final picker = ImagePicker();
 
+  // Pastel Colors
   final Color pastelPurple = const Color(0xFFE0BBE4);
   final Color pastelBlue = const Color(0xFFA8DADC);
   final Color pastelGreen = const Color(0xFFB5EAD7);
@@ -27,7 +28,7 @@ class _MyProfilePageState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: pastelPurple.withOpacity(0.1),
+      backgroundColor: Colors.white, // خلفية بيضاء
       appBar: AppBar(
         backgroundColor: pastelPurple,
         title: const Text('My Profile', style: TextStyle(color: Colors.black)),

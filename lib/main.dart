@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF2B2D42)), // Space Cadet
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'main'),
@@ -44,8 +44,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return MaterialApp(
       title: 'Login App',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.deepPurple),
-      home: const MainLoginScreen(), // تعيين صفحة تسجيل الدخول
+      theme: ThemeData(primarySwatch: Colors.brown),
+      home: const MainLoginScreen(),
     );
   }
 }
@@ -61,6 +61,12 @@ class _MainLoginScreenState extends State<MainLoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+
+  final Color pastelPurple = const Color(0xFFE0BBE4);
+  final Color pastelBlue = const Color(0xFFA8DADC);
+  final Color pastelGreen = const Color(0xFFB5EAD7);
+  final Color pastelPink = const Color(0xFFFBC4AB);
+
   void _login() {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       _showDialog('Missing Fields', 'Please enter both email and password.');
@@ -70,21 +76,26 @@ class _MainLoginScreenState extends State<MainLoginScreen> {
   }
 
   Future<void> checkLogin(BuildContext context) async {
-    checkConction(); // فحص الاتصال بالإنترنت
+    checkConction();
 
-    var url = "login/checkLogin.php?Email=" + _emailController.text + "&Password=" + _passwordController.text;
+    var url = "login/checkLogin.php?Email=" +
+        _emailController.text +
+        "&Password=" +
+        _passwordController.text;
     final response = await http.get(Uri.parse(serverPath + url));
 
     if (checkLoginModel.fromJson(jsonDecode(response.body)).userID == "0") {
-      var uti = new Utils();
+      var uti = Utils();
       uti.showMyDialog(context, "Error", "Username or password is wrong");
     } else {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('token', checkLoginModel.fromJson(jsonDecode(response.body)).userID!);
+      await prefs.setString(
+          'token', checkLoginModel.fromJson(jsonDecode(response.body)).userID!);
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomePageScreen(title: 'homepage')),
+        MaterialPageRoute(
+            builder: (context) => const HomePageScreen(title: 'homepage')),
       );
     }
   }
@@ -119,30 +130,38 @@ class _MainLoginScreenState extends State<MainLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.lock_outline, size: 80, color: Color(0xFF333366)),
+              Icon(Icons.lock_outline, size: 80, color: pastelPurple),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'Welcome Back!',
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Color(0xFF333366)),
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: pastelPurple,
+                ),
               ),
               const SizedBox(height: 10),
-              const Text(
+              Text(
                 'Log in to your account',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: pastelBlue,
+                ),
               ),
               const SizedBox(height: 40),
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  prefixIcon: const Icon(Icons.email_outlined),
+                  labelStyle: TextStyle(color: pastelPurple),
+                  prefixIcon: Icon(Icons.email_outlined, color: pastelGreen),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -154,7 +173,8 @@ class _MainLoginScreenState extends State<MainLoginScreen> {
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  prefixIcon: const Icon(Icons.lock_outline),
+                  labelStyle: TextStyle(color: pastelPurple),
+                  prefixIcon: Icon(Icons.lock_outline, color: pastelGreen),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -165,7 +185,7 @@ class _MainLoginScreenState extends State<MainLoginScreen> {
                 onPressed: _login,
                 child: const Text('Log In', style: TextStyle(fontSize: 16)),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF333366),
+                  backgroundColor: pastelPurple,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   minimumSize: const Size(double.infinity, 50),
@@ -175,12 +195,13 @@ class _MainLoginScreenState extends State<MainLoginScreen> {
               const SizedBox(height: 10),
               OutlinedButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => RegisterScreen()));
                 },
                 child: const Text('Create New Account', style: TextStyle(fontSize: 15)),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: const Color(0xFF333366),
-                  side: const BorderSide(color: Color(0xFF333366)),
+                  foregroundColor: pastelBlue,
+                  side: BorderSide(color: pastelBlue),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   minimumSize: const Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

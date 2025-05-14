@@ -45,7 +45,7 @@ class _MyHomePageState extends State<HomePageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: pastelPurple.withOpacity(0.1),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(widget.title,
             style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w600)),
@@ -60,7 +60,7 @@ class _MyHomePageState extends State<HomePageScreen> {
           if (snapshot.hasData) {
             if (snapshot.data!.isEmpty) {
               return const Center(
-                child: Text('لا توجد نتائج', style: TextStyle(fontSize: 20)),
+                child: Text('No Results', style: TextStyle(fontSize: 20)),
               );
             } else {
               return ListView.builder(
@@ -104,31 +104,31 @@ class _MyHomePageState extends State<HomePageScreen> {
             }
           } else if (snapshot.hasError) {
             return const Center(
-              child: Text('حدث خطأ أثناء التحميل', style: TextStyle(fontSize: 18)),
+              child: Text('Error loading data', style: TextStyle(fontSize: 18)),
             );
           }
           return const Center(child: CircularProgressIndicator());
         },
       ),
       drawer: Drawer(
-        backgroundColor: pastelBlue.withOpacity(0.2),
+        backgroundColor: pastelPurple,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
               decoration: BoxDecoration(
-                color: pastelBlue,
+                color: pastelPurple,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
                   Text(
-                    'مرحباً بك 👋',
+                    'Welcome 👋',
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'اختر من القائمة أدناه',
+                    'Choose from the list below',
                     style: TextStyle(fontSize: 16, color: Colors.white70),
                   ),
                 ],

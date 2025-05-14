@@ -17,7 +17,7 @@ class _AddContentScreenState extends State<AddContentScreen> {
 
   final picker = ImagePicker();
 
-  // ألوان الباستيل
+
   final pastelBlue = const Color(0xFFA8DADC);
   final pastelPink = const Color(0xFFFBC4AB);
   final pastelPurple = const Color(0xFFE0BBE4);
@@ -98,7 +98,7 @@ class _AddContentScreenState extends State<AddContentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: pastelPurple.withOpacity(0.1),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Add Content'),
         backgroundColor: pastelPurple,

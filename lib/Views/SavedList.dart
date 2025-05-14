@@ -11,7 +11,7 @@ class _SavedListState extends State<SavedList> {
   List<dynamic> _videos = [];
   bool _loading = true;
 
-  final String url = 'https://yourdomain.com/content/GetContentDetails.php'; // <-- غيّر الرابط هنا
+  final String url = 'https://yourdomain.com/content/GetContentDetails.php'; // <-- Change this URL
 
   @override
   void initState() {
@@ -29,20 +29,22 @@ class _SavedListState extends State<SavedList> {
           _loading = false;
         });
       } else {
-        print("فشل في التحميل: ${response.statusCode}");
+        print("Failed to load: ${response.statusCode}");
         setState(() => _loading = false);
       }
     } catch (e) {
-      print("خطأ: $e");
+      print("Error: $e");
       setState(() => _loading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final Color pastelBackground = Color(0xFFF0F4EF);
-    final Color pastelCard = Color(0xFFFBEAFF);
-    final Color pastelText = Color(0xFF6C63FF);
+    // Pastel colors
+    final Color pastelBackground = Color(0xFFFFFBFA); // Light Pinkish White
+    final Color pastelCard = Color(0xFFFBEAFF);       // Pastel Pink
+    final Color pastelText = Color(0xFFE0BBE4);        // Pastel Purple
+    final Color pastelSubtitle = Color(0xFF333333);    // Dark text for readability
 
     return Scaffold(
       backgroundColor: pastelBackground,
@@ -54,7 +56,12 @@ class _SavedListState extends State<SavedList> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _videos.isEmpty
-          ? const Center(child: Text('لا يوجد فيديوهات محفوظة'))
+          ? const Center(
+        child: Text(
+          'No saved videos',
+          style: TextStyle(fontSize: 16),
+        ),
+      )
           : ListView.builder(
         itemCount: _videos.length,
         itemBuilder: (context, index) {
@@ -63,7 +70,9 @@ class _SavedListState extends State<SavedList> {
             color: pastelCard,
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             elevation: 4,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
             child: ListTile(
               contentPadding: const EdgeInsets.all(16),
               title: Text(
@@ -78,11 +87,20 @@ class _SavedListState extends State<SavedList> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 8),
-                  Text('📎 الرابط: ${item['link']}', style: TextStyle(color: Colors.black87)),
+                  Text(
+                    '📎 Link: ${item['link']}',
+                    style: TextStyle(color: pastelSubtitle),
+                  ),
                   const SizedBox(height: 4),
-                  Text('📝 المحتوى: ${item['content']}', style: TextStyle(color: Colors.black87)),
+                  Text(
+                    '📝 Content: ${item['content']}',
+                    style: TextStyle(color: pastelSubtitle),
+                  ),
                   const SizedBox(height: 4),
-                  Text('📺 القناة: ${item['channelID']}', style: TextStyle(color: Colors.black87)),
+                  Text(
+                    '📺 Channel: ${item['channelID']}',
+                    style: TextStyle(color: pastelSubtitle),
+                  ),
                 ],
               ),
             ),

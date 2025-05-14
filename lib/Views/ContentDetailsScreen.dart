@@ -56,7 +56,7 @@ class ChannelPageState extends State<ChannelDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: pastelPurple.withOpacity(0.1),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           widget.title,

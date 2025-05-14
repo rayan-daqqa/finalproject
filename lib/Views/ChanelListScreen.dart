@@ -16,7 +16,7 @@ class ChanellistScreen extends StatefulWidget {
 }
 
 class _ChanelListScreen extends State<ChanellistScreen> {
-  // ألوان الباستيل
+
   final Color pastelBlue = const Color(0xFFA8DADC);
   final Color pastelPink = const Color(0xFFFBC4AB);
   final Color pastelPurple = const Color(0xFFE0BBE4);
@@ -40,7 +40,7 @@ class _ChanelListScreen extends State<ChanellistScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: pastelPurple.withOpacity(0.1),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: pastelPurple,
         title: Text(widget.title, style: const TextStyle(color: Colors.black)),
@@ -104,9 +104,9 @@ class _ChanelListScreen extends State<ChanellistScreen> {
               ),
             );
           }
-          return const Center(
+          return Center(
             child: CircularProgressIndicator(
-              color: Colors.pinkAccent,
+              color: pastelPink,
             ),
           );
         },
