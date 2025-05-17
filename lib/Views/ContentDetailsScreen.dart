@@ -44,6 +44,7 @@ class ChannelPageState extends State<ChannelDetailsScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Added to saved list!')),
+
     );
   }
 
@@ -115,7 +116,7 @@ class ChannelPageState extends State<ChannelDetailsScreen> {
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton.icon(
-                    onPressed: () => insertPageToSavedList(context),
+                    onPressed: (    {var url = "content/GetContentDetails.php"}) => insertPageToSavedList(context),
                     icon: const Icon(Icons.bookmark_add, color: Colors.black),
                     label: const Text('Add to saved list', style: TextStyle(color: Colors.black)),
                     style: ElevatedButton.styleFrom(

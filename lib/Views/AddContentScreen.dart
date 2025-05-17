@@ -1,6 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+
+import '../Utils/ClientConfing.dart';
+
+
 
 class AddContentScreen extends StatefulWidget {
   const AddContentScreen({Key? key}) : super(key: key);
@@ -12,6 +17,7 @@ class AddContentScreen extends StatefulWidget {
 class _AddContentScreenState extends State<AddContentScreen> {
   String? selectedCategory;
   final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _txtLink = TextEditingController();
   File? selectedMedia;
   String? selectedType;
 
@@ -65,11 +71,13 @@ class _AddContentScreenState extends State<AddContentScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
+                // Navigator.pop(context);
+                // Navigator.pop(context);
+                insertToDB();
               },
-              style: ElevatedButton.styleFrom(
+              style: ElevatedButton.styleFrom (
                 backgroundColor: pastelGreen,
+                  // Navigator.pop(context);
               ),
               child: const Text('Confirm'),
             ),
@@ -94,6 +102,40 @@ class _AddContentScreenState extends State<AddContentScreen> {
       child: Text(category),
     );
   }
+
+
+
+  Future<void> insertContent() async {
+
+    if (_titleController.text.isNotEmpty && selectedType != null) {
+      showReviewDialog();
+      // Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill all fields')),
+      );
+    }
+  }
+
+
+
+  Future<void> insertToDB() async {
+    var url = "content/insertContent.php?title=" + _titleController.text + "&channelID=3" + "&content=" + _txtLink.text + "&link=" + _txtLink.text;
+    final response = await http.get(Uri.parse(serverPath + url));
+    print(serverPath + url);
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Welcome to Life Skills')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Something went wrong, please try again')),
+      );
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -167,6 +209,7 @@ class _AddContentScreenState extends State<AddContentScreen> {
                                 return AlertDialog(
                                   title: const Text('Write Article'),
                                   content: TextField(
+                                    controller: _txtLink,
                                     onChanged: (value) => articleText = value,
                                     maxLines: 5,
                                     decoration: const InputDecoration(hintText: "Enter your article here"),
@@ -211,16 +254,9 @@ class _AddContentScreenState extends State<AddContentScreen> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            if (_titleController.text.isNotEmpty && selectedType != null) {
-                              showReviewDialog();
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Please fill all fields')),
-                              );
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(backgroundColor: pastelGreen),
-                          child: const Text('Save'),
+                          insertContent();
+                          }, child: const Text('Save'),
+
                         ),
                       ],
                     )

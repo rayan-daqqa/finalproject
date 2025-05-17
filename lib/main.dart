@@ -60,12 +60,12 @@ class MainLoginScreen extends StatefulWidget {
 class _MainLoginScreenState extends State<MainLoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-
   final Color pastelPurple = const Color(0xFFE0BBE4);
   final Color pastelBlue = const Color(0xFFA8DADC);
   final Color pastelGreen = const Color(0xFFB5EAD7);
   final Color pastelPink = const Color(0xFFFBC4AB);
+
+
 
   void _login() {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
@@ -75,6 +75,8 @@ class _MainLoginScreenState extends State<MainLoginScreen> {
     }
   }
 
+
+
   Future<void> checkLogin(BuildContext context) async {
     checkConction();
 
@@ -82,6 +84,7 @@ class _MainLoginScreenState extends State<MainLoginScreen> {
         _emailController.text +
         "&Password=" +
         _passwordController.text;
+    print(serverPath + url);
     final response = await http.get(Uri.parse(serverPath + url));
 
     if (checkLoginModel.fromJson(jsonDecode(response.body)).userID == "0") {
@@ -89,8 +92,9 @@ class _MainLoginScreenState extends State<MainLoginScreen> {
       uti.showMyDialog(context, "Error", "Username or password is wrong");
     } else {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString(
-          'token', checkLoginModel.fromJson(jsonDecode(response.body)).userID!);
+      await prefs.setString('token', checkLoginModel.fromJson(jsonDecode(response.body)).userID!);
+      await prefs.setString('email', _emailController.text);
+      await prefs.setString('password', _passwordController.text);
 
       Navigator.push(
         context,
@@ -99,6 +103,8 @@ class _MainLoginScreenState extends State<MainLoginScreen> {
       );
     }
   }
+
+
 
   Future<void> checkConction() async {
     try {
@@ -110,6 +116,8 @@ class _MainLoginScreenState extends State<MainLoginScreen> {
       _showDialog("No Connection", "Please connect to the internet.");
     }
   }
+
+
 
   void _showDialog(String title, String message) {
     showDialog(
@@ -127,8 +135,28 @@ class _MainLoginScreenState extends State<MainLoginScreen> {
     );
   }
 
+
+  Future<void> fillSavedPars()
+  async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? email = prefs.getString("email");
+    String? password = prefs.getString("password");
+    if(email != null && email != "")
+      {
+        _emailController.text = email;
+        _passwordController.text = password!;
+      }
+
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
+
+    fillSavedPars();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(

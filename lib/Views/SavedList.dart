@@ -11,7 +11,7 @@ class _SavedListState extends State<SavedList> {
   List<dynamic> _videos = [];
   bool _loading = true;
 
-  final String url = 'https://yourdomain.com/content/GetContentDetails.php'; // <-- Change this URL
+  final String url ="content/GetContentDetails.php";
 
   @override
   void initState() {

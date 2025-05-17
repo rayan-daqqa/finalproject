@@ -20,6 +20,7 @@ class checkLoginModel {
       fullName: json['fullName'],
 
 
+
     );
   }
 

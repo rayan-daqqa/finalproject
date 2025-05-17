@@ -144,6 +144,7 @@ class _MyProfilePageState extends State<ProfileScreen> {
             ElevatedButton(
               child: const Text('Save'),
               onPressed: () {
+                var url = "users/UpdateUser.php";
                 setState(() {
                   username = _controller.text.trim();
                 });
@@ -169,6 +170,7 @@ class _MyProfilePageState extends State<ProfileScreen> {
               leading: const Icon(Icons.photo_library),
               title: const Text('Pick from Gallery'),
               onTap: () {
+                var url = "users/UpdateUser.php";
                 _pickImage(ImageSource.gallery);
                 Navigator.of(context).pop();
               },
@@ -177,6 +179,7 @@ class _MyProfilePageState extends State<ProfileScreen> {
               leading: const Icon(Icons.camera_alt),
               title: const Text('Take a Picture'),
               onTap: () {
+                var url = "users/UpdateUser.php";
                 _pickImage(ImageSource.camera);
                 Navigator.of(context).pop();
               },
