@@ -8,11 +8,11 @@ class Content {
 
   });
 
-  int contentID;
-  int channelID;
-  String title;
-  String content;
-  String link;
+  int? contentID;
+  int? channelID;
+  String? title;
+  String? content;
+  String? link;
 
 
   factory Content.fromJson(Map<String, dynamic> json)=> Content(
@@ -31,7 +31,6 @@ class Content {
         "content": content,
         "channelID": channelID,
         "link": link,
-
 
       };
 }

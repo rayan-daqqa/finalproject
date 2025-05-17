@@ -1,9 +1,16 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:final_project/Models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:final_project/main.dart';
 import 'package:final_project/Views/SavedList.dart';
+import 'package:http/http.dart' as http;
+
+import '../Utils/ClientConfing.dart';
+
+
 
 class ProfileScreen extends StatefulWidget {
   final String category;
@@ -25,8 +32,32 @@ class _MyProfilePageState extends State<ProfileScreen> {
   final Color pastelGreen = const Color(0xFFB5EAD7);
   final Color pastelPink = const Color(0xFFFBC4AB);
 
+  late User _currUser;
+
+
+  Future<void> getMyDetails() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+
+    var url = "Profile/getProfileDetails.php?userID=" + token!;
+    final response = await http.get(Uri.parse(serverPath + url));
+    print(serverPath + url);
+    _currUser = User.fromJson(json.decode(response.body));
+    setState(() {
+      // _isLoading = false;
+    });
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
+
+
+    getMyDetails();
+
+
     return Scaffold(
       backgroundColor: Colors.white, // خلفية بيضاء
       appBar: AppBar(
@@ -77,7 +108,7 @@ class _MyProfilePageState extends State<ProfileScreen> {
               GestureDetector(
                 onTap: _showEditNameDialog,
                 child: Text(
-                  username,
+                  _currUser.firstName!,
                   style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -88,16 +119,16 @@ class _MyProfilePageState extends State<ProfileScreen> {
                 onPressed: _navigateToSavedList,
               ),
               const SizedBox(height: 20),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                ),
-                onPressed: _confirmDeleteAccount,
-                icon: const Icon(Icons.delete),
-                label: const Text('Delete Account', style: TextStyle(fontSize: 16)),
-              ),
+              // ElevatedButton.icon(
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: Colors.red,
+              //     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              //   ),
+              //   onPressed: _confirmDeleteAccount,
+              //   icon: const Icon(Icons.delete),
+              //   label: const Text('Delete Account', style: TextStyle(fontSize: 16)),
+              // ),
             ],
           ),
         ),

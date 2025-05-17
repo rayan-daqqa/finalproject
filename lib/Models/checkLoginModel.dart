@@ -19,8 +19,6 @@ class checkLoginModel {
       userID: json['userID'],
       fullName: json['fullName'],
 
-
-
     );
   }
 

@@ -35,18 +35,21 @@ class ChannelPageState extends State<ChannelDetailsScreen> {
     });
   }
 
+
+
   Future insertPageToSavedList(BuildContext context) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userID = prefs.getString("token");
 
-    var url = "favorites/insertpagetoSavedlist.php?userID=$userID&channelID=${_currContent.contentID}";
+    var url = "savedContent/insertSaved.php?userID=$userID&contentID=${_currContent.contentID}";
     await http.get(Uri.parse(serverPath + url));
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Added to saved list!')),
-
     );
   }
+
+
 
   @override
   void initState() {
@@ -91,20 +94,20 @@ class ChannelPageState extends State<ChannelDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    _currContent.title,
+                    _currContent.title!,
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500, color: Colors.blueGrey),
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    _currContent.content,
+                    _currContent.content!,
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400, color: Colors.black87),
                   ),
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
-                      launch(_currContent.link);
+                      launch(_currContent.link!);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: pastelPink,
@@ -116,7 +119,9 @@ class ChannelPageState extends State<ChannelDetailsScreen> {
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton.icon(
-                    onPressed: (    {var url = "content/GetContentDetails.php"}) => insertPageToSavedList(context),
+                    onPressed: (
+                        {
+                          var url = "content/GetContentDetails.php"}) => insertPageToSavedList(context),
                     icon: const Icon(Icons.bookmark_add, color: Colors.black),
                     label: const Text('Add to saved list', style: TextStyle(color: Colors.black)),
                     style: ElevatedButton.styleFrom(

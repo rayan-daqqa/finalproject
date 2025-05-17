@@ -72,17 +72,17 @@ class _ChanelListScreen extends State<ChanellistScreen> {
                       child: ListTile(
                         onTap: () async {
                           final prefs = await SharedPreferences.getInstance();
-                          await prefs.setInt('lastContentID', content.contentID);
+                          await prefs.setInt('lastContentID', content.contentID!);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ChannelDetailsScreen(title: content.content),
+                              builder: (context) => ChannelDetailsScreen(title: content.content!),
                             ),
                           );
                         },
                         contentPadding: const EdgeInsets.all(16),
                         title: Text(
-                          content.title,
+                          content!.title!,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

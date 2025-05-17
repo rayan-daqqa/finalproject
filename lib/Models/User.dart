@@ -8,12 +8,12 @@ class User{
     this.profileImgURL="",
   });
 
-  String Password;
-  String firstName;
-  String lastName;
-  String userID;
-  String email;
-  String profileImgURL;
+  String? Password;
+  String? firstName;
+  String? lastName;
+  String? userID;
+  String? email;
+  String? profileImgURL;
 
 
   factory User. fromJson(Map<String, dynamic>json )=> User(
@@ -24,6 +24,8 @@ class User{
     email:json["email"],
     profileImgURL:json["profileImgURL"],
   );
+
+  // {"firstName":"mohmad","lastName":"majadly","email":"2@2"}
 
     Map< String, dynamic>tojson()=>{
       "Password":Password,
