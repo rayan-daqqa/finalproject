@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../Models/Content.dart';
 import '../Utils/ClientConfing.dart';
+import 'ContentDetailsScreen.dart';
 
 
 
@@ -22,6 +22,7 @@ class _SavedListState extends State<SavedList> {
   @override
   void initState() {
     super.initState();
+    print("fdfdfdf");
     // fetchVideos();
     getMySavedContent();
   }
@@ -31,9 +32,10 @@ class _SavedListState extends State<SavedList> {
 
   Future<List<Content>> getMySavedContent() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final int? token = prefs.getInt('token');
+    final String? token = prefs.getString('token');
+    print("dddd");
 
-    var url = "savedContent/getMySavedContent.php?userID=${token.toString()}";
+    var url = "savedContent/getMySavedContent.php?userID=" + token!;
     print(serverPath + url);
 
     final response = await http.get(Uri.parse(serverPath + url));
@@ -43,6 +45,10 @@ class _SavedListState extends State<SavedList> {
       arr.add(Content.fromJson(i));
     }
     _videos = arr;
+    print("_videos:" + _videos.length.toString());
+    setState(() {
+      _loading = false;
+    });
     return arr;
   }
 
@@ -69,6 +75,20 @@ class _SavedListState extends State<SavedList> {
   //     setState(() => _loading = false);
   //   }
   // }
+
+  openContent(Content content)
+  async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('lastContentID', content.contentID!);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChannelDetailsScreen(title: content.content!),
+      ),
+    );
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +117,7 @@ class _SavedListState extends State<SavedList> {
           : ListView.builder(
         itemCount: _videos.length,
         itemBuilder: (context, index) {
-          final item = _videos[index];
+          Content item = _videos[index];
           return Card(
             color: pastelCard,
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -106,9 +126,12 @@ class _SavedListState extends State<SavedList> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: ListTile(
+              onTap: (){
+               openContent(item);
+              },
               contentPadding: const EdgeInsets.all(16),
               title: Text(
-                item['title'] ?? '',
+                item.content ?? '',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -120,17 +143,17 @@ class _SavedListState extends State<SavedList> {
                 children: [
                   const SizedBox(height: 8),
                   Text(
-                    '📎 Link: ${item['link']}',
+                    '📎 Link: ${item.link}',
                     style: TextStyle(color: pastelSubtitle),
                   ),
+                  // const SizedBox(height: 4),
+                  // Text(
+                  //   '📝 Content: ${item.content']}',
+                  //   style: TextStyle(color: pastelSubtitle),
+                  // ),
                   const SizedBox(height: 4),
                   Text(
-                    '📝 Content: ${item['content']}',
-                    style: TextStyle(color: pastelSubtitle),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '📺 Channel: ${item['channelID']}',
+                    '📺 Channel: ${item.channelID}',
                     style: TextStyle(color: pastelSubtitle),
                   ),
                 ],

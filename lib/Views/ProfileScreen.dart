@@ -48,6 +48,13 @@ class _MyProfilePageState extends State<ProfileScreen> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+    print("fdfdfdf");
+    // fetchVideos();
+    getMyDetails();
+  }
 
 
 
@@ -55,7 +62,6 @@ class _MyProfilePageState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
 
 
-    getMyDetails();
 
 
     return Scaffold(
